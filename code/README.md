@@ -18,13 +18,11 @@ root/
 │   ├── Dockerfile
 │   └── docker-compose.yml
 ├── src/
-├── examples/                     # folder containing some code examples
 ├── notebooks/                    # folder containing some notebooks
 ├── requirements.txt
 ├── setup.py
 ├── Makefile
 ├── README.md
-├── TODO
 ```
 
 ---
@@ -65,10 +63,10 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-2. Install the package:
+2. Install requirements:
 
 ```bash
-pip install -e .
+pip install -r requirements.txt
 ```
 
 3. Start coding (Jupyter Notebook):
@@ -78,6 +76,24 @@ jupyter notebook
 ```
 
 PS. if preferred, also python scripts can be used.
+
+
+### Method 3: Develop your own code-package
+
+If you want to develop dedicated functions or classes, you can put them inside
+the `linear_and_nonlinear_kf` foder, organizing python modules into files or
+sub-packages, as per your preferred choice.
+
+In this case, if using Docker, uncomment the lines
+
+```Dockerfile
+# # Locall install the package
+# RUN pip install -e .
+```
+
+in the Dockerifle to install the package in the container at build time.
+
+If using a local python environment, install the package manually.
 
 ## 🗨️ Contact
 

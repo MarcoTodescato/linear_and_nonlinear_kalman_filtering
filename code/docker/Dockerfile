@@ -16,8 +16,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy entire project
 COPY . .
 
-# Locall install the package
-RUN pip install -e .
+# # Locall install the package
+# RUN pip install -e .
 
 # Expose notebook port
 EXPOSE 8888
