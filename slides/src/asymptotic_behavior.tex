@@ -1,0 +1,240 @@
+
+%--------------------------
+\myframe{Asymptotic Behavior: Model and estimation setting}{%
+
+  Consider the discrete-time linear stochastic system
+  \[
+  \begin{aligned}
+  x_{k+1} &= A x_k + G w_k,\\
+  y_k &= C x_k + v_k,
+  \end{aligned}
+  \]
+  with
+  \[
+  \mathbb E[w_k]=0, \qquad \mathbb E[v_k]=0,
+  \]
+  \[
+  \mathbb E[w_k w_j^\top]=Q\,\delta_{kj}, \qquad
+  \mathbb E[v_k v_j^\top]=R\,\delta_{kj}, \qquad
+  \mathbb E[w_k v_j^\top]=0.
+  \]
+  Assume also:
+  \begin{itemize}
+    \item $Q \succeq 0$, $R \succ 0$,
+    \item $x_0$ is independent of $\{w_k\},\{v_k\}$,
+    \item second moments exist.
+  \end{itemize}
+  The Kalman filter provides the minimum-variance linear estimate, and in the Gaussian case the conditional mean:
+  \[
+  \hat x_{k|k} = \mathbb E[x_k\mid y_0,\dots,y_k].
+  \]
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Kalman filter recursion}{%
+  Prediction and correction are
+  \[
+  \hat x_{k+1|k} = A \hat x_{k|k},
+  \qquad
+  P_{k+1|k} = A P_{k|k} A^\top + G Q G^\top,
+  \]
+  \[
+  K_{k+1} = P_{k+1|k} C^\top \bigl(C P_{k+1|k} C^\top + R\bigr)^{-1},
+  \]
+  \[
+  \hat x_{k+1|k+1} = \hat x_{k+1|k} + K_{k+1}\bigl(y_{k+1} - C\hat x_{k+1|k}\bigr),
+  \]
+  \[
+  P_{k+1|k+1} = (I-K_{k+1}C) P_{k+1|k}.
+  \]
+  With the usual compact notation, the covariance satisfies the Riccati recursion
+  \[
+  P_{k+1} = A P_k A^\top + GQG^\top
+  - A P_k C^\top (C P_k C^\top + R)^{-1} C P_k A^\top.
+  \]
+  Thus the asymptotic behavior of the filter is largely governed by the asymptotic behavior of this nonlinear matrix recursion.
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Error dynamics and why Riccati matters}{%
+  Define the estimation error
+  \[
+  e_{k|k} = x_k - \hat x_{k|k}.
+  \]
+  Then, after update,
+  \[
+  e_{k+1|k+1} = (I-K_{k+1}C)(A e_{k|k} + G w_k) - K_{k+1} v_{k+1}.
+  \]
+  Hence the mean-square behavior depends on:
+  \begin{enumerate}
+    \item the gain sequence $K_k$,
+    \item the closed-loop matrix $A-K_k C A$ (or equivalent predictor form $A-K_k C$ depending on indexing),
+    \item the covariance sequence $P_k = \mathbb E[e_{k|k} e_{k|k}^\top]$.
+  \end{enumerate}
+  The Riccati equation determines both $P_k$ and the gain
+  \[
+  K_k = P_{k|k-1} C^\top (C P_{k|k-1} C^\top + R)^{-1}.
+  \]
+  Therefore:
+  \begin{center}
+  \emph{asymptotic filter behavior $\Longleftrightarrow$ asymptotic Riccati behavior.}
+  \end{center}
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Structural assumptions behind the major results}{
+  The standard asymptotic results require structural conditions weaker than full controllability/observability:
+  \begin{block}{Detectability}
+  The pair $(A,C)$ is \emph{detectable} if every unstable mode of $A$ is observable.
+  \end{block}
+  \begin{block}{Stabilizability}
+  The pair $(A,GQ^{1/2})$ is \emph{stabilizable} if every unstable mode of $A$ is reachable through the process noise channel.
+  \end{block}
+  These conditions are natural because:
+  \begin{itemize}
+    \item unobservable unstable modes cannot be corrected from measurements,
+    \item unstable modes not excited/reachable through $GQ^{1/2}$ create pathological Riccati behavior.
+  \end{itemize}
+  Under $R\succ0$, detectability of $(A,C)$ and stabilizability of $(A,GQ^{1/2})$ are the key assumptions guaranteeing existence and uniqueness of the stabilizing steady-state covariance.
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Discrete algebraic Riccati equation (DARE)}{
+  A steady-state covariance $P_\infty$ must satisfy the fixed-point equation
+  \[
+  P = A P A^\top + GQG^\top - A P C^\top (CPC^\top + R)^{-1} C P A^\top.
+  \]
+  This is the \alert{filtering DARE}. Equivalently, the steady-state gain is
+  \[
+  K_\infty = P_\infty C^\top (C P_\infty C^\top + R)^{-1}
+  \]
+  for the filtered form, or the corresponding predictor gain depending on notation.
+
+  Important facts:
+  \begin{itemize}
+    \item the DARE can have multiple symmetric solutions,
+    \item only one is typically \emph{stabilizing},
+    \item the stabilizing solution is the one relevant for the asymptotic Kalman filter.
+  \end{itemize}
+  The associated steady-state error dynamics become time-invariant.
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Main convergence result for the covariance}{
+  Assume:
+  \[
+  R \succ 0, \qquad (A,C) \text{ detectable}, \qquad (A,GQ^{1/2}) \text{ stabilizable}.
+  \]
+  Then the Riccati recursion converges, for any initial covariance $P_0 \succeq 0$, to the unique stabilizing solution $P_\infty$ of the DARE:
+  \[
+  P_k \to P_\infty.
+  \]
+  Consequently,
+  \[
+  K_k \to K_\infty.
+  \]
+  Moreover, the corresponding closed-loop estimation dynamics are asymptotically stable:
+  \[
+  \rho\bigl(A - K_\infty C\bigr) < 1
+  \]
+  (or the equivalent predictor-form matrix under the adopted indexing convention).
+
+  Interpretation:
+  \begin{itemize}
+    \item after transients, the filter ``forgets'' the initial covariance,
+    \item the gain becomes constant,
+    \item the estimation error reaches a stationary covariance regime.
+  \end{itemize}
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Steady-state or constant-regime Kalman filter}{
+  Once $P_k$ and $K_k$ have converged, one replaces the time-varying filter by the constant-gain filter
+  \[
+  \hat x_{k+1|k} = A \hat x_{k|k},
+  \]
+  \[
+  \hat x_{k|k} = \hat x_{k|k-1} + K_\infty (y_k - C \hat x_{k|k-1}).
+  \]
+  Equivalently,
+  \[
+  \hat x_{k+1|k+1} = (I-K_\infty C)A\hat x_{k|k} + K_\infty y_{k+1}.
+  \]
+  Advantages of the constant-regime filter:
+  \begin{itemize}
+    \item lower online computational cost,
+    \item simpler implementation in embedded systems,
+    \item explicit LTI error dynamics,
+    \item same asymptotic performance as the full Kalman filter.
+  \end{itemize}
+  Hence, for time-invariant models, the practical end-point is often a \emph{steady-state Kalman filter}. 
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Interpretation of transient vs asymptotic phases}{
+  Two phases are usually observed:
+  \begin{block}{Transient phase}
+  $P_k$ depends on $P_0$ and the gain $K_k$ varies significantly. The filter is learning how much to trust model vs measurements.
+  \end{block}
+  \begin{block}{Asymptotic phase}
+  $P_k \approx P_\infty$ and $K_k \approx K_\infty$. The filter has entered a stationary regime.
+  \end{block}
+  The tuning parameters shape this regime:
+  \[
+  Q \uparrow \Rightarrow K_\infty \uparrow \quad \text{(more trust in measurements)},
+  \]
+  \[
+  R \uparrow \Rightarrow K_\infty \downarrow \quad \text{(more trust in the model)}.
+  \]
+  Thus the asymptotic gain is the precise mathematical embodiment of the model/measurement tradeoff.
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Continuous-time counterpart}{
+  For the continuous-time model
+  \[
+  \dot x = A x + G w, \qquad y = Cx + v,
+  \]
+  with white noises of intensities $Q$ and $R$, the covariance satisfies the differential Riccati equation
+  \[
+  \dot P = A P + P A^\top + GQG^\top - P C^\top R^{-1} C P.
+  \]
+  At steady state, $P_\infty$ solves the continuous algebraic Riccati equation (CARE)
+  \[
+  A P + P A^\top + GQG^\top - P C^\top R^{-1} C P = 0.
+  \]
+  Under the analogous detectability/stabilizability assumptions,
+  \[
+  P(t) \to P_\infty,
+  \qquad
+  K(t)=P(t)C^\top R^{-1} \to K_\infty = P_\infty C^\top R^{-1}.
+  \]
+  The constant-regime filter is then the steady-state Kalman--Bucy filter.
+}
+
+%--------------------------
+\myframe{Asymptotic Behavior: Take-away results}{
+  \begin{enumerate}
+    \item The asymptotic behavior of the Kalman filter is governed by a Riccati equation.
+    \item Under
+    \[
+    (A,C) \text{ detectable}, \qquad (A,GQ^{1/2}) \text{ stabilizable}, \qquad R\succ0,
+    \]
+    the Riccati recursion converges to a unique stabilizing solution.
+    \item The filter gain converges:
+    \[
+    K_k \to K_\infty.
+    \]
+    \item The estimation error covariance converges:
+    \[
+    P_k \to P_\infty.
+    \]
+    \item The asymptotic filter is a constant-gain linear filter with the same steady-state performance as the full time-varying Kalman filter.
+  \end{enumerate}
+  \vspace{0.3cm}
+  In short:
+  \[
+  \text{assumptions} \Longrightarrow \text{Riccati convergence} \Longrightarrow \text{constant-regime KF}.
+  \]
+}
+
