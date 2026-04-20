@@ -1,0 +1,608 @@
+
+\section{Preliminaries}
+\sectionframe{2}{Preliminaries: before diving in... some definitions and preliminary results}
+
+%--------------------------
+\myframe{Random signals and stochastic processes}{%
+
+\begin{block}{Random signal}    
+    A random signal can defined as the tuple $(T,V,S)$ where
+    \begin{itemize}
+        \item $T$ is the set of time. We consider discrete-time signals, $T=\Z$
+        \item $V$ is the \tq{alphabet} of signal values, $V=\R$ or $V=\R^n$
+        \item $S$ is the sample space. Every $s\in S$ is a function $s:t\mapsto s(t)$
+        where $t\in T$ and $s(t) \in V$ also called \textit{trajectory} of the signal
+    \end{itemize}
+\end{block}
+
+\pause
+
+\begin{block}{Stochastic process}
+    Mathematical formulation/description used to formally model the aleatoric
+    nature of a random signal. Consisting of the tuple $(S,\S, P)$ where:
+    \begin{itemize}
+        \item $S$ sample space. Set of all possible trajectories
+        \item $\S$ events set of all logical propositions or events regarding the signal
+        \item $P$ probability measure on $\S$, i.e. $P: \S\mapsto [0,1]$ mapping
+        every $A\in\S$ to $P(A)\in[0,1]$, the a-priori
+        \tq{confidence} $A$ actually happening
+    \end{itemize}
+\end{block}
+}
+
+
+%--------------------------
+\myframe{A more general formulation}{%
+
+\begin{block}{Stochastic process (usual def in prob. theory)}
+    A collection of random variables, $\{y(t)\}$, indexed by a temporal index
+    $t\in T$, all defined on the same (abstract) probability space $(\Omega, \A,
+    P)$ where:
+    \begin{itemize}
+        \item $\Omega$ event set of \tq{state of nature} $\omega$
+        \item $\A$ $\sigma$-algebra of subsets of $\Omega$ 
+        \item P probability measure on $\A$
+    \end{itemize}
+    Each variable is a ($\A$-measurable) function $y(t): t \mapsto y(t,\omega)$. The
+    \textit{trajectories} are the successive determinations
+    $\{y(\cdot,\tilde{\omega})\}$ of $y(t)$ corresponding to a particular event
+    $\tilde{\omega}\in\Omega$
+\end{block}
+
+\pause
+
+Our definition $(S,\S,P)$ is a \tq{concrete} version of the abstract
+$(\Omega,\A,P)$. If we define a variable
+$y(t)\in(S,\S,P)$ as
+%
+$$
+y(t,s) := s(t)
+$$
+where $y(t)$ associates at every trajectory $s\in S$ its value at $t$, then it
+is clear that, for varying $t$, the successive determinations of the variables
+$\{y(t)\}$ corresponding to the event $\overline{s}\in \S$ describe indeed the
+trajectory $\{\overline{s}(t)\}$ of the process.
+}
+
+%--------------------------
+\myframe{Let's clarify...}{%
+
+The probabilistic formulation and formalization introduced is \textit{just} a
+convenient choice to describe (or model) the unpredictable nature of a signal.
+It is worth remembering that this is one possible choice that eventually
+allows one to resort to tools from probability theory to describe, handle and
+develop useful tools for filtering and identification. For this reason, it is
+important to understand that, regardless the real nature of the underline
+signal, the same formulation (as \textit{stochastic process}) can indeed be used
+to describe every signal (aleatoric or not). On the other hand, it might be
+worth remembering that this choice is dictated by the \tq{simplicity},
+compactness and generality to describe events that could indeed also be
+described using a \tq{deterministic} formulation.
+}
+
+%--------------------------
+\myframe{The Problem of \textit{Estimation}: Estimate vs Measure}{%
+
+Statistical problem of estimation seen as formalization of the mathematical
+problem of measuring where the goal is that of getting information about a
+desired quantity $x$, non directly observable, based on observable data, $y$,
+whose values are produced by the measurement \tq{instrument}.
+
+\vspace{3mm}
+
+\pause
+Ideally, knowing the \tq{physical coupling}, i.e., relation, between $x$ and
+$y$ should allow to retrieve the value of $x$ based on observable values of
+$y$. Practically, this relation is either not perfectly known or influenced
+by \textit{environmental conditions} which introduce \textit{uncertainty} in
+the measurement process.
+
+$$
+y=h(x) \Longleftrightarrow y=h(x) + \epsilon
+$$
+
+As a consequence, the objective can be understood (or interpreted) as that
+of \textit{estimating} the value of $x$ based on the observed values of $y$.
+
+\vspace{3mm}
+
+\pause
+Following this \tq{uncertainty-based} interpretation:
+\begin{itemize}
+    \item it is not always straightforward how to generally get $x$ from $y$
+    \item being impractical (meaningless) to reconstruct $x$ with certainty, how
+    to \textit{best} approximate it? 
+\end{itemize}
+}
+
+%--------------------------
+\myframe{The Bayesian approach}{%
+
+\begin{block}{}
+    $x$ assumed to be a random quantity characterized by some a-priori
+    information
+\end{block}
+
+\pause
+
+\begin{alertblock}{Notation: random variables vs sample values}
+    It is important to understand the difference between a random variable, for
+    which bold letters $\x$ will be used vs the corresponding sample values,
+    i.e., the actual value taken by the random variable, for which normal case
+    letters $x$ will be used.
+\end{alertblock}
+
+\pause
+
+\begin{block}{Bayesian inference}
+    Assume there exist a random variable/vector $\x$ described by the
+    probability density $p_\x(x)$ and the random variable/vector $\y$ of
+    measurements described by the conditional density $f(y|x) = f(y|\x=x) =
+    \frac{P(y\leq \y \leq y+dy | \x=x)}{dy}$.
+    
+    \vspace{3mm}
+
+    The problem of Bayesian inference/estimation is that of reconstructing $\x$
+    based on $p_\x$, $f(y|x)$ and the observation of $\y=y$. This can be
+    understood as to:
+    \begin{itemize}
+        \item compute the new distribution of $\x$ determined by the observation $\y=y$, or
+        \item reconstruct $x=\x(\omega)$ determined by the \tq{measurement}
+        process
+    \end{itemize}
+\end{block}
+}
+
+%--------------------------
+\myframe{Bayesian inference: complete reconstruction}{%
+Assuming $p_\x(x)$ and $f(y|x)$ completely known, the problem is that of
+computing
+
+$$
+f(x|y) = \frac{f(y|x)p_\x(x)}{\int f(y|x)p_\x(x) dx} = \frac{p_{\y\x}(y, x)}{p_\y(y)}
+$$
+
+i.e., the conditional \textit{a-posteriori} density of $\x$ given $\y=y$, which
+is the most exhaustive and complete description possible.
+
+\vspace{5mm}
+
+\pause
+
+Explicit analytical computation of the above equations often not possible.
+
+\vspace{5mm}
+
+\pause
+
+In practice, this is rarely the case and/or even necessary because rather than
+an exhaustive description, a more handy point estimate of $\x$, telling us what
+is the unobservable sample value $\x=x$ that gave rise to the observation
+$\y=y$, is more useful.
+
+}
+
+%--------------------------
+\myframe{Bayesian inference: point estimate}{%
+
+Assume the relation between $\x$ and $\y$ could analytically be described as
+
+$$
+\y = h(\x, \w)
+$$
+
+being $\w$ the random vector capturing the variable interations with the
+environment, i.e., the \tq{measurement noise}. 
+
+\vspace{5mm}
+
+\pause
+
+During the measurement process the particular experimental conditions $\omega$
+give raise to a specific determination $\w(\omega)=w$ which, in turn, give raise
+to an observed value $\y=y$ linked to $\x=x$ by the relation
+
+$$
+y=h(x,w)
+$$
+
+\pause
+
+Then, the problem is that of reconstructing the value $x$ of $\x$ that
+\tq{caused} $\y=y$ during the measurement process. Since estimating/knowing $w$
+is intrinsically impossible, the problem is understood as that of \tq{best}
+approximating $x$.
+
+\vspace{3mm}
+
+\pause
+
+It is then necessary to define a \tq{reasonable} class of approximation criteria.
+}
+
+%--------------------------
+\myframe{Bayesian inference: conditional/posterior expected risk}{%
+
+\begin{block}{Cost/Loss Function}
+    It is called \tq{loss/cost} a scalar function $c: \R^n\mapsto\R$ of $\xi=z-x$,
+    $z\in\R^n$, s.t. $c\geq0$, $c''>0$ (strictly convex) and $c(0)=0$. It is said
+    symmetric if $c(-\xi)=c(\xi)$.
+
+    \vspace{3mm}
+
+    E.g.: $c(z-x)=\|z-x\|^2_Q$ where $Q>0$ symmetric and $\|x\|^2_Q = x^TQx$.
+\end{block}
+
+\pause
+$z$ plays the role of approximation of $x$. The problem could then be that of
+finding $z$ that minimizes $c$ for every value of the unknown $x$. In practice
+it is \tq{smarter} to consider all the available probabilistic information,
+e.g., given by $\y=y$.
+
+\pause
+\begin{block}{Conditional Expected Risk and Point Bayesian Estimate}
+    Consider the \textit{Conditional Expected Risk}
+    $$
+    R(z,y):=\E[c(z-\x)|\y=y]= \int_{\R^n} c(z-x)f(x|y)dx
+    $$
+    Then, the \textit{Point Bayesian Estimate} is defined as
+    $$
+    \hat{x}= \textnormal{Arg min}_z R(z,y)
+    $$
+\end{block}
+}
+
+%--------------------------
+\myframe{Bayesian inference: Conditional Expectation}{%
+
+\begin{exampleblock}{Theorem: Conditional Expectation}
+    If the loss $c$ is symmetric and the conditional density $f(\cdot|y)$ is
+    symmetric around its mean $\mu(y)=\E[\x|\y=y]=\int xf(x|y)dx$, then
+    $\hat{x}$ does not depend on $c$ and it is equal to the conditional mean of
+    $\x$ given $\y=y$, i.e., $\E[\x|\y=y]$.
+
+    \vspace{3mm}
+
+    Moreover, if the cost $c$ is of quadratic form, i.e., $\|\cdot\|^2_Q$, then
+    $\hat{x}=\E[\x|\y=y]$ for all types of conditional density $f(x|y)$
+    (assuming the conditional mean exists).
+
+    \vspace{3mm}
+
+    More generally, among all possible measurable functions $g:
+    \R^m\mapsto\R^n$, for every symmetric $Q>0\in \R^{n\times n}$, 
+    % the conditional mean $\E[\x|\y]$ is that minimizing the
+    % mean of the squared distance $\|\x-g(\y)\|_Q$, i.e.,
+    $$
+    \E[\x|\y] = \textnormal{Arg min}_{g(\cdot)} \E[\|\x-g(\y)\|_Q^2]
+    $$
+\end{exampleblock}
+
+\vspace{1mm}
+
+\pause
+
+Interpreted as a function of $y$, for symmetric $c$ and $f$, the conditional
+mean $\E[\x|\y]: y \mapsto \E[\x|\y=y]$ is the Bayesian
+estimator\footnote{Estimator: function (algorithm) of the observed data mapping
+them to point estimates.} $\hat{x}$ of $x$ that minimizes the conditional
+expected risk $R(z,y)$. This is also true for any $f$ if $c$ is quadratic. In
+this case it is referred to as the \textit{minimum squared Bayesian estimator}. 
+}
+
+%--------------------------
+\myframe{Theorem: Conditional Expectation (proof of last part)}{%
+
+For the law of total expectation, we can write
+%
+\begin{align*}
+    \E[\|\x-g(\y)\|_Q^2] &= \int_\R p_\y(y) \E[\|\x-g(\y)\|_Q^2 | \y = y]dy \\
+                         &= \E\left[
+                                \E[ \|\x-g(\y)\|_Q^2 | \y ]
+                               \right] \\
+                         &= \E\left[
+                                \E[ \|\x - \E[\x|\y] + \E[\x|\y] - g(\y)\|_Q^2 | \y ]
+                              \right] \\
+                         &= \E\Big[
+                                   \E[ [\x - \E[\x|\y]]^T    Q [\x - \E[\x|\y]]    | \y ] \\
+                         &\quad + 2\E[ [\x - \E[\x|\y]]^T    Q [\E[\x|\y] - g(\y)] | \y] \\
+                         &\quad +  \E[ [\E[\x|\y] - g(\y)]^T Q [\E[\x|\y] - g(\y)] | \y ]
+                               \Big]\\
+                         &= \E[\|\x-\E[\x|\y]\|_Q^2] + \E[\|\E[\x|\y]-g(\y)\|_Q^2]  
+\end{align*}
+
+where the last equality holds by taking the mean and since the second double
+product term is zero conditioning on $\y$. And since the two terms are
+non-negative and the first does not depend on $g$, we can minimize the second
+by setting $g(\y)=\E[\x|\y]$.
+
+}
+
+%--------------------------
+\myframe{Bayesian inferece: MAP estimate}{%
+
+\textit{What if, instead of minimizing risk, one wants to maximize gain?}
+
+\vspace{2mm}
+
+\pause
+\begin{block}{Expected gain}
+    $$
+    G(z,y):=\E[(z-\x)|\y=y] = \int_{\R^n}\gamma(z-x)f(x|y)dx
+    $$
+    being $\gamma$ a concave function with its max in the origin.
+\end{block}
+
+\vspace{2mm}
+
+\pause
+By choosing $\gamma$ to arbitrarily approximate Dirac's impulse $\delta$
+$\longrightarrow$ $G(z,y)\approx f(z|y)$ 
+
+\vspace{2mm}
+
+The corresponding Max Expected Gain (or \textit{Maximum a Posterior} - M.A.P.)
+estimator is given by
+
+$$
+\hat{x}_{MAP}(y) := \textnormal{Arg max}_z f(z|y)
+$$
+
+which, for general $f(x|y)$ is the \textbf{conditional mode} ($\equiv \E[\x|\y]$
+for unimodal symmetric densities).
+
+\pause
+\begin{alertblock}{}
+    Unfortunately analytical computations of mean (or mode) are usually not possible.
+\end{alertblock}
+
+}
+
+%--------------------------
+\myframe{Bayesian inference: the Gaussian case}{%
+% One particularly important case where the computations can be carried out is
+% when $\x$ and $\y$ are jointly Gaussian.
+
+\begin{exampleblock}{The Gaussian case}
+    If $\x$ and $\y$ are jointly Gaussian described by a density function with
+    mean and variance
+    $$
+    \mu_\z = \begin{bmatrix} \mu_\x \\ \mu_\y \end{bmatrix}; \quad
+    \Sigma_\z = \begin{bmatrix} \Sigma_\x & \Sigma_{\x\y}\\ \Sigma_{\y\x} & \Sigma_\y \end{bmatrix}
+    $$
+    the conditional density is still Gaussian with mean and variance (if
+    $\Sigma_\y>0$\footnote{If this is not the case it can be shown that using
+    the pseudo-inverse $(\cdot)^\dagger$ works.})
+    \begin{align*}
+        \E[\x|\y] &= \mu_\x + \Sigma_{\x\y}\Sigma_\y^{-1}(\y-\mu_\y)\\
+        \Var[\x|\y] &= \Sigma_\x - \Sigma_{\x\y}\Sigma_\y^{-1}\Sigma_{\y\x}
+    \end{align*}
+\end{exampleblock}
+
+\pause
+
+Interpreting $\E[\x|\y]$ as the Bayesian estimator of $\x$ given $\y$, notice
+that:
+\begin{itemize}
+    \item the estimation error is defined as: $\tilde{\x}:=\x-\E[\x|\y]$
+    \item $\tilde{\x}$ is independent from the data, i.e., all available info
+    has been exploited
+    \item $\Var[\x|\y]$ (cond. var. of $\x|\y$) can be understood as
+    $\Sigma_{\tilde{\x}}$ (uncond. var. of $\tilde{\x}$), does not depend on the
+    data, and is given by the difference between $\Sigma_\x$ and
+    $\Var\E[\x|\y]=\Sigma_{\x\y}\Sigma_\y^{-1}\Sigma_{\y\x}$ (uncond. vars. of
+    $\x,\ \E[\x|\y]$, resp.)
+\end{itemize}
+}
+
+%--------------------------
+\myframe{The Gaussian case: proof}{%
+
+\begin{exampleblock}{}
+    Consider $\overline{\z}:=\z-\muz \sim \N(0,\Sigma_{\z})$.
+    Consider a linear transformation of $\tilde{\x} = \overline{\x} + A\overline{\y}$,
+    $\tilde{\y} = \overline{\y}$ such that $\tilde{\x}\perp\tilde{\y}$. That is
+    $$
+    \E[\tilde{\x}\tilde{\y}^T] = 0 = \Sigma_{\x\y} + A\Sigma_{\y} \Longrightarrow A=-\Sigma_{\x\y}\Sigma_{\y}^{-1}
+    $$
+    Clearly, since linear transforms maintain Gaussianity,
+    $$
+    \tilde{\z}\sim\N(0,\Sigma_{\tilde{\z}})=
+        \begin{bmatrix}
+            I & A \\ & I
+        \end{bmatrix}
+        \Sigma_{\z}
+        \begin{bmatrix}
+            I & \\
+            A^T & I
+        \end{bmatrix}
+        =
+        \begin{bmatrix}
+            \Sigma_{\tilde{x}} & \\ & \Sigma_{\y}
+        \end{bmatrix},\quad
+        \Sigma_{\tilde{x}}=\Sigma_{\x} - \Sigma_{\x\y}\Sigma_{\y}^{-1}\Sigma_{\y\x}
+    $$
+    %
+    and being Gaussian and uncorrelated, $\tilde{\x}$ and $\tilde{\y}$ are also
+    independent
+    \begin{align*}
+        \Longrightarrow \overline{\x}=\tilde{\x}-A\overline{\y}
+            \Longrightarrow &\E[\overline{\x}|\overline{\y}]=-A\overline{\y}=\Sigma_{\x\y}\Sigma_{\y}^{-1}\overline{\y}\\
+                            & \Var[\overline{x}|\overline{\y}]=\Sigma_{\tilde{\x}} = \Sigma_{\x} - \Sigma_{\x\y}\Sigma_{\y}^{-1}\Sigma_{\y\x}
+    \end{align*}
+
+    Introducing the means you get the final result.
+\end{exampleblock}
+
+}
+
+%--------------------------
+\myframe{Conditional Expectation: brief recap}{%
+
+    So far we said that:
+
+    \medskip
+    \begin{itemize}
+        \pause
+        \item $\E[\x|\y]$ is the function $g(\cdot)$ of the data $\y$ that
+        minimizes $\E\|\x-g(\y)\|_Q^2$ among the (vast) class of measurable
+        functions that are also unbiased, i.e., $\E[g(\y)]=\E[\x]$;
+        
+        \pause
+        \item for $Q=I$, $\E\|\x-g(\y)\|^2_Q$ is the scalar variance of the
+        estimation error defined as $\tilde{\x}:=\x-\E[\x|\y]$ $\Longrightarrow$
+        $\E[\x|\y]$ is the \textit{minimum variance estimator} of $\x$;
+        
+        \pause
+        \item if $\x$ and $\y$ are jointly Gaussian, the computation of
+        $\E[\x|\y]$ (and $\Var[\x|\y]$) can be explicitly performed and depends
+        only on first and second moments of the joint density;
+        
+        \pause
+        \item in general, the explicit computation of $\E[\x|\y]$ is
+        impractical/impossible, being the conditional expectation a general
+        \textit{non-linear} function of the data.
+    \end{itemize}
+
+    \vspace{5mm}
+
+    \pause
+    What if the functional family of $g(\cdot)$ is a-priori restricted? E.g. to be linear
+}
+
+%--------------------------
+\myframe{Linear Minimum Mean Squared Error (MMSE) Estimators}{%
+Restricting $g(\cdot)$ to the family of linear unbiased functions of $\y$, we
+have
+
+\begin{block}{Linear MMSE Estimator: the Problem (vector form)}
+    The Linear MMSE Estimator is the linear function of the data
+    $$
+    g(\y) = A\y + b,\quad A\in\R^{n\times m},\ b\in\R^n
+    $$
+    that minimizes the mean of the squared estimation error $\E\|\x-g(\y)\|^2$,
+    that is
+    $$ 
+    \min_{A,b} \E\|A\y+b-\x\|^2.
+    $$
+\end{block}
+}
+
+%--------------------------
+\myframe{Minimum introduction to Hilbert spaces}{%
+
+A Hilbert space $\H$ is a vector space (over $\R$ or $\C$) equipped with an
+inner product $\inner{\cdot}{\cdot}$ which is complete w.r.t. the norm
+$\|x\|=\sqrt{\inner{x}{x}}$ induced by the inner product. That is, every Cauchy
+sequence converges with respect to $\|\cdot\|$. 
+
+\vspace{5mm}
+
+Examples:
+\begin{itemize}
+    \item $\R^n$ endowed with the standard Euclidean inner product;
+    \item $L^2(\Omega, \A, P)$ of second order variables of a random experiment
+    $\{\Omega, \A, P\}$: the space of variables $f$, $\E[|f|^2]<\infty$ (mean
+    squared integrable $\equiv$ finite variance), with inner product
+    $\inner{\xi}{\eta}=\E[\xi\overline{\eta}]$ given by the correlation between
+    variables;
+    \item $\H(\y) := \spn{\y_1,\ldots,\y_m} = \left\{\sum_{i=1}^m a_i\y_i;\
+    a_i\in\R\right\} \subseteq L^2(\Omega, \A, P)$ \textit{linearly} generated
+    by the second order random process $\y$ (collection of variables) with
+    $\E[\y_i]=0$ (zero mean) and $\|\y_i\|^2_{\H} = \E[|\y_i|^2]  = \Var[\y_i] <
+    \infty$ (finite variance).
+\end{itemize}
+
+\vspace{5mm}
+
+\pause
+\begin{alertblock}{}
+    $\Longrightarrow$ resorting to Hilbert spaces and, in particular, $\H(\y)$ allows to interpret
+the problem geometrically!
+\end{alertblock}
+
+}
+
+
+%--------------------------
+\myframe{Geometric formulation}{%
+    \begin{exampleblock}{Theorem: Orthogonal Projections (scalar form)}
+        Let $\x\in\H$ be a (scalar) random variable. Let $\H(\y)\subset\H$. The
+        variable $\z^*\in\H(\y)$ minimizing $\|\x-\z\|^2_{\H}=\E[|\x-\z|^2]$ is unique and is
+        the orthogonal projection of $\x$ onto $\H(\y)$. Necessary and
+        sufficient condition for $\z^*$ to be the orthogonal projection is that
+        $$
+            \x-\z^* \bot\ \H(\y)\ \ \equiv\ \ \E[(\x-\z^*)\y_i]\ \ i\in\until{m}
+        $$
+        being $\y_i$ the generators of $\H(\y)$.
+    \end{exampleblock}
+
+    \vspace{5mm}
+
+    \pause
+    Thanks to this fundamental theorem, the properties inherited from Hilbert
+    spaces and the correspondence between the notion of orthogonality ($\bot$)
+    and uncorrelation (through the inner product/norm) a solution to the
+    \textit{Linear MMSE Estimator} can be drawn (directly in vector form from a
+    element-wise application of the projection theorem).
+
+}
+
+%--------------------------
+\myframe{Linear Minimum Mean Squared Error (MMSE) Estimators}{%
+Restricting $g(\cdot)$ to the family of linear unbiased functions of $\y$, we
+have
+
+\pause
+\begin{block}{Linear MMSE Estimator: the Problem (vector form)}
+    The Linear MMSE Estimator is the linear function of the data
+    $$
+    g(\y) = A\y + b,\quad A\in\R^{n\times m},\ b\in\R^n
+    $$
+    that minimizes the mean of the squared estimation error $\E\|\x-g(\y)\|^2$,
+    that is
+    $$ 
+    \min_{A,b} \E\|A\y+b-\x\|^2.
+    $$
+\end{block}
+
+\pause
+\begin{exampleblock}{Linear MMSE Estimator: the Solution (vector form)}
+    It can be shown that the solution $\hat{\x}(\y)=g^*(\y)$ (also denoted
+    $\Elin[\x|\y]$) is given by
+    $$
+    \hat{\x}(\y) = \mu_\x + \Sigma_{\x\y}\Sigma_\y^{-1}(\y-\mu_\y)
+    $$
+    that is $A^*=\Sigma_{\x\y}\Sigma_\y^{-1}$, $b^*=\mu_\x-A^*\mu_\y$.
+    Equivalently to the Gaussian case, it depends only of the first
+    and second moments of the joint density.    
+\end{exampleblock}
+
+}
+
+%--------------------------
+\myframe{Notation disclaimer}{%
+\customblock{alertblock}{}{$\Elin[\x|\y] \neq \E[\x|y]$}
+
+\vspace{.5cm}
+
+\begin{itemize}
+    \item $\E[\x|y]$ minimum variance estimator = conditional mean
+    \item $\Elin[\x|\y]$ linear minimum variance estimator $\neq$ conditional mean
+    \item $\Elin[\x|\y]$ in general depends only on up to second order statistics
+    \item $\Elin[\x|\y]$ sometimes referred to as \textbf{weak conditional mean}
+    \item $\Elin[\x|\y] = \E[\x|y]$ for jointly Gaussian densities
+    \item $\Elin[\x|\y]$ very \tq{far} from conditional mean for general densities
+\end{itemize}
+
+}
+
+%--------------------------
+\myframe{Example with code}{%
+Before looking at more theory ... a first example of Kalman Filtering!
+
+\vspace{1.5cm}
+
+Jupyter notebook: \texttt{linear\_constant\_velocity.ipynb}
+
+}

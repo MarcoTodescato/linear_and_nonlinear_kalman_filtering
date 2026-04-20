@@ -1,0 +1,208 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{General info about the course and Introduction}
+\sectionframe{1}{General info about the course and Introduction}
+
+%--------------------------
+\myframe{Schedule}{
+        \begin{tabular}{c|c|l}
+            \textbf{Date} & \textbf{Time} & \textbf{Tentative Topic}\\
+            27/04/2026 & h10.30-12:30 (2h) & Intro e Preliminaries\\
+            04/05/2026 & h09.30-12:30 (3h) & Preliminaries/Linear Theory\\
+            11/05/2026 & h09.30-12:30 (3h) & Linear Theory\\
+            18/05/2026 & h09.30-13:30 (4h) & Linear Theory + Essay\\
+            25/05/2026 & h09.30-13:30 (4h) & Linear/Nonlinear Theory + Essay\\
+            01/06/2026 & h09.30-13:30 (4h) & Nonlinear Theory/Adds-on + Essay 
+        \end{tabular}
+}
+
+%--------------------------
+\myframe{Exam}{
+    % \begin{enumerate}
+    %     \setcounter{enumi}{\numexpr1-1\relax}
+    %     \item Proofs of theorems seen during lessons 
+    %     \begin{itemize}
+    %         \item during lessons we will encounter some (few) basic
+    %         theorems/corollaries/properties. You are asked \underline{\textbf{to
+    %         try}} to prove them formally on your own.
+    %         \item do your best and try not to cheat!
+    %         \item you can work in a group if preferred. 
+    %     \end{itemize}
+    % \end{enumerate}
+    % \vspace{0.2mm}
+    % AND
+    % \vspace{0.2mm}
+    % \begin{enumerate}
+    %     \setcounter{enumi}{\numexpr2-1\relax}
+    %     \item Practical coding essay:
+    %     \begin{itemize}
+    %         \item on a selected application: pick a topic that is relatable to
+    %         your need/research.
+    %         \item partially developed during class.
+    %         \item programming language: python (MATLAB is an option but try to
+    %         avoid it), either using jupyter notebook or script based. Make sure all
+    %         necessary dependencies to run are available.
+    %         \item no use of predefined libraries with KF implementations.
+    %         \item you can work in a group if preferred.
+    %         \item \underline{\textbf{objective}:} explore (possibly all) the
+    %         topics covered during the course, from linear to non-linear KF. You
+    %         might need to start from modeling assumptions, linearize if
+    %         necessary, discuss noise statistics and then implement the filter.
+    %         Try to explore limits and nuances as if it were a small research
+    %         project.
+    %     \end{itemize}
+    % \end{enumerate}
+
+    Practical coding essay + report:
+        \begin{itemize}
+            \item on a selected application: pick a topic possibly related to
+            your need/research.
+            \item partially developed during class.
+            \item programming language: python -- either using jupyter notebooks
+            (recommended) or script based. Make sure all necessary dependencies
+            to run are available.\\\textbf{For other programming language ask first!!}
+            \item no use of predefined libraries with KF implementations.
+            \item you can work in a group if preferred.
+            \item \underline{\textbf{objective}:} explore (possibly all) the
+            topics covered during the course, from linear to non-linear KF. You
+            might need to start from modeling assumptions, linearize if
+            necessary, discuss noise statistics and then implement the filter.
+            Try to explore limits and nuances as if it were a small research
+            project.
+            \item present results in a pdf report.
+        \end{itemize}
+
+}
+
+%--------------------------
+\myframe{References and additional material}{
+    \begin{itemize}
+        \item [IT] \textbf{Picci, G. (2007). Filtraggio statistico (Wiener, Levinson, Kalman) e applicazioni. Libreria Progetto.}
+        \item [EN] Sanso F., Pileggi, C. and Biagi, L. (2024). A tutorial on Kalman filtering. The linear, extended and unscented filters. (pdf available as resource in the material folder)
+        \item [EN] Anderson, B. D., and Moore, J. B. (2005). Optimal filtering. Courier Corporation.
+    \end{itemize}
+
+    \vspace{5mm}
+
+    G-drive: \hyperlink{https://drive.google.com/drive/folders/1BbuSTiO4wym0qOAqeLUkiVum_14kRRzD?usp=drive_link}{\url{https://drive.google.com/drive/folders/1BbuSTiO4wym0qOAqeLUkiVum_14kRRzD?usp=drive_link}}
+
+    \vspace{5mm}
+
+    github: \hyperlink{https://github.com/MarcoTodescato/linear_and_nonlinear_kalman_filtering}{\url{https://github.com/MarcoTodescato/linear_and_nonlinear_kalman_filtering}}
+}
+
+
+%--------------------------
+\myframe{Goal}{%
+How to formulate estimation problems encountered in many engineering fields and
+applications as instances of a general dynamical system state estimation problem
+and how to derive the mathematical solution of the latter problem (possibly
+depending on additional assumption on the functional family of the considered
+dynamical system).%
+
+\vspace{10mm}
+
+\pause
+\textbf{Essentially, this will lead to the well-known (linear) Kalman filter and
+its (nonlinear) extensions.}%
+}
+
+%--------------------------
+\myframe{A bit of history: the theories of statistical filtering}{%
+
+\begin{exampleblock}{Wiener-Kolmogorov (1940)}
+    \begin{itemize}
+        \item $I=(-\infty, t]$, infinite time support
+        \item $\{\x(t)\}$, $\{\y(t)\}$ are weakly jointly stationary
+    \end{itemize}
+    The impulse response of the optimal filter is time-invariant hence it can be
+    analytically computed once and for all times, knowing the processes
+    statistics.
+\end{exampleblock}
+
+\pause
+
+\begin{block}{Levinson (1950)}
+    \begin{itemize}
+        \item no more infinite (lower unbounded) time support
+    \end{itemize}
+    The impulse response of the filter is time-varying but can be efficiently
+    computed at time $t$ using a recursive structure which exploits the
+    computations until $t-1$. 
+\end{block}
+
+\pause
+
+\begin{alertblock}{Kalman (1960)}
+    \begin{itemize}
+        \item signals can be modeled as stochastic dynamical systems of finite
+        size
+    \end{itemize}
+    Looks for recursive finite-memory schemes that resembles that same dynamical
+    system structure of finite size.
+\end{alertblock}
+}
+
+%--------------------------
+\myframe{A bit of history: a change of perspective}{%
+Revolutionary apporach introduced by R.E. Kalman in 1960 to the problem of
+statistical filtering.%
+
+\vspace{5mm}
+
+Change of perspective:
+\begin{itemize}
+    \item \textbf{Wiener-Kolmogorov}: explicit computation of the filter
+    \textbf{transfer function}, practically useful only for signals
+    characterized by a \textbf{rational} spectral density
+        \begin{itemize}
+            \item implicit computations possible only for rational signals
+            \item actual physical implementation of the filter as a set of
+            difference (recursive) equations only for rational representations
+        \end{itemize}
+
+    \pause
+    \medskip
+    \item \textbf{Kalman}: hypothesis that the signals can be described as
+    (linear) \textbf{dynamical systems} of finite dimension
+        \begin{itemize}
+            \item no transfer functions involved
+            \item natural formulation of the filter as a fixed algorithmic
+            structure essentially consisting of a discrete-time (linear)
+            dynamical system of finite memory, driven by measurements
+            \item implementation always possible as a recursive algorithm 
+        \end{itemize}
+\end{itemize}
+}
+
+%--------------------------
+\myframe{Prediction vs Filtering vs Smoothing}{%
+Assume $\{\x(t)\}$ and $\{\y(t)\}$ are (second order\footnote{First and second
+moment statistics exist and are finite.}) processes of known dimensions. Denote
+with $\xhat(t|I)$ the estimator of $\x(t)$ given $\{\y(t)\}_{t\in I}$, $I$ being
+the time support.
+
+\vspace{.2cm}
+
+It is possible to identify 3 classes of \underline{\textbf{estimation problems}}.
+
+\vspace{.2cm}
+
+\pause
+\begin{block}{Prediction}
+    Find $\xhat(t+h|I)$ being $I=[t_0,t]$ and $h>0$, that is the estimator
+    $h$-step ahead in the future from measurements up to time $t$.
+\end{block}
+
+\pause
+\begin{block}{Filtering}
+    Find $\xhat(t|I)$ being $I=[t_0,t]$, that is the estimator at current time
+    $t$ from all available measurements up to $t$. 
+\end{block}
+
+\pause
+\begin{block}{Smoothing}
+    Find $\xhat(t|I)$ being $I=[t_0,t_1]$ with $t<t_1$, that is the estimator at
+    time $t$ from all available measurements up to $t_1$ in the future.
+\end{block}
+}

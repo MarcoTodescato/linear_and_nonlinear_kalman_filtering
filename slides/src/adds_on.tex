@@ -1,0 +1,239 @@
+
+\section{Adds-on}
+\sectionframe{3}{Adds-on}
+
+% --------------------------
+\subsection{Filter Tuning}
+
+% --------------------------
+\myframe{A Practical Recipe for Tuning a Kalman Filter (part 1)}{
+
+\textbf{Goal:} essentially, tune the two covariances that matter most:
+\[
+Q \quad\text{(process noise)} \qquad R \quad\text{(measurement noise)}
+\]
+
+\pause
+\medskip
+\textbf{1. Estimate measurement noise $R$ from real data}
+\begin{itemize}
+    \item Hold the system still or run in a regime with known truth
+    \item Compute sample covariance of sensor error
+\end{itemize}
+\[
+    R \approx \mathrm{cov}(y_k - y^{\mathrm{true}}_k)
+    \quad \text{or approximately} \quad
+    R \approx \mathrm{cov}(y_k - \bar y)
+\]
+
+\pause
+\medskip
+\textbf{2. Parameterize process noise \(Q\) simply}
+
+Start with simple diagonal $Q$ and then move towards $Q = \alpha Q_0$, where
+\(Q_0\) encodes relative trust between states and \(\alpha\) is one scalar to
+tune.
+
+\pause
+\medskip
+\textbf{3. Check the innovations}
+\[
+\nu_k = y_k - H\hat x_k^-,
+\qquad
+S_k = H P_k^- H^\top + R
+\]
+A good filter has innovations that are approximately white, zero-mean, and with
+the expected size (covariance close to \(S_k\)).
+
+}
+
+% --------------------------
+\myframe{A Practical Recipe for Tuning a Kalman Filter (part 2)}{
+
+\textbf{4. Tune using observed behavior}
+\begin{center}
+    \begin{tabular}{ll}
+        \textbf{Symptom} & \textbf{Adjustment} \\
+        \hline
+        Estimate too noisy & increase \(R\) or decrease \(Q\) \\
+        Estimate too sluggish & increase \(Q\) or decrease \(R\) \\
+        Bias / drift not tracked & increase \(Q\) on bias states \\
+    \end{tabular}
+\end{center}
+
+\pause
+\medskip
+\textbf{Best practical rule:} fix \(R\) from measurements, then tune only \(Q\)
+until the filter is as fast as possible without visibly fitting noise.
+
+\medskip
+\begin{exampleblock}{Example sweep}
+    \texttt{for alpha in [1e-3, 1e-2, ..., 1e3]:}\\
+    \texttt{\hspace{.5cm} Q = alpha * Q0}\\
+    \texttt{\hspace{.5cm} run filter}\\
+    \texttt{\hspace{.5cm} inspect innovation variance + tracking lag}
+\end{exampleblock}
+
+}
+
+
+
+%--------------------------
+\subsection{Kalman Smoother}
+
+\myframe{Fixed-Interval Rauch-Tung-Striebel Smoother}{%
+
+\textbf{Objective of smoothing}:
+\begin{itemize}
+    \item Fixed-lag: provide an almost real-time (slightly delayed) improved
+    estimate at $k-N$ using a sliding window of measurements up to $k$.
+    \item Fixed-interval: provide the best estimate using all available
+    measurements up to a certain instant $n$.
+\end{itemize}
+
+\pause
+\medskip
+The RTS smoother\footnote{There are also other smoother implementation e.g., the Modified
+Bryson-Frazier, which we are not going to cover.} consists of:
+\begin{itemize}
+    \item forward pass: exactly equal to the standard KF equations to compute
+    $\xhat(k|k-1)$, $\xhat(k|)$, $P(k|k-1)$ and $P(k|k)$.
+
+    \pause
+    \item backward pass: compute the \textit{smoothed} estimates $\xhat(k|n)$,
+    $P(k|n)$ via
+    \begin{itemize}
+        \item $\xhat(k|n) = \xhat(k|k) + C_k\left(\xhat(k+1|n) - \xhat(k+1|k)\right)$
+        \item $P(k|n) = P(k|k) + C_k\left( P(k+1|n) - P(k+1|k) \right)C_k^T$  
+        \item $C_k = P(k|k)F^TP(k+1|k)^{-1}$
+    \end{itemize}
+\end{itemize}
+
+\pause
+\medskip
+Note that, conversely to fixed-lag smoothers, fixed-interval are
+\textbf{offline} algorithms as they require all future measurements up to $n$.
+
+}
+
+
+%--------------------------
+\subsection{Control perspective: LQG}
+
+%--------------------------
+\myframe{LQG control and its connection to KF}{%
+
+    \textbf{Problem setup (stochastic optimal control)}
+    \[
+    x_{t+1} = A x_t + B u_t + w_t,\quad
+    y_t = C x_t + v_t,\quad
+    w_t \sim \mathcal N(0,Q),\quad v_t \sim \mathcal N(0,R)
+    \]
+
+    \medskip
+
+    \textbf{Objective (LQG cost):}
+    $
+    J = \mathbb E\!\left[\sum_{t=0}^{T}
+    x_t^T Q_x x_t + u_t^T R_u u_t
+    \right]
+    $
+
+    \medskip
+
+    \textbf{Key result (Separation principle)}: \boxed{\text{Optimal control = LQR + KF}}
+
+    \medskip
+    \begin{itemize}
+        \item \textbf{State estimation (Kalman filter)}: $\xhat(t|t) = \E[\x_t \mid \Hpast{t}(\y)]$
+
+        \item \textbf{Control law (LQR)}: $u_t = -K_t \xhat(t|t)$ (Controller uses $\xhat$, not $\x$)
+    \end{itemize}
+
+    \medskip
+
+    \textbf{Dual Riccati equations} (forward + backward)
+
+    \begin{itemize}
+        \item KF covariance:
+        $
+        P_{t+1} = A P_t A^T + Q - A P_t C^T (C P_t C^T + R)^{-1} C P_t A^T
+        $
+
+        \item LQR cost2go:
+        $
+        S_t = A^T S_{t+1} A + Q_x - A^T S_{t+1} B (B^T S_{t+1} B + R_u)^{-1} B^T S_{t+1} A
+        $
+    \end{itemize}
+
+    \vspace{-0.1cm}
+
+    % \medskip
+
+    % \textbf{KF vs LQR (duality)}
+
+    % \[
+    % \boxed{
+    % \begin{array}{c|c}
+    % \text{Estimation (KF)} & \text{Control (LQR)}\\
+    % \hline
+    % A,\;C & A^T,\;B^T \\
+    % Q,\;R & Q_x,\;R_u \\
+    % P_t & S_t \\
+    % \text{Kalman gain} & \text{feedback gain}
+    % \end{array}
+    % }
+    % \]
+
+    % \medskip
+
+    % \textbf{Interpretation}
+
+    % \begin{itemize}
+    %     \item KF = optimal \emph{information extraction}
+    %     \item LQR = optimal \emph{control action}
+    %     \item LQG = optimal closed-loop system under uncertainty
+    % \end{itemize}
+
+    \begin{columns}[t]
+        %---------------- LEFT COLUMN ----------------
+        \column{0.52\textwidth}
+        \vspace{-0.3cm}
+        %
+        \[
+        \boxed{
+        \begin{array}{c|c}
+        \text{KF (estimation)} & \text{LQR (control)}\\
+        \hline
+        A,\;C & A^T,\;B^T \\
+        Q,\;R & Q_x,\;R_u \\
+        P_t & S_t \\
+        K_t^{\text{KF}} & K_t^{\text{LQR}}
+        \end{array}
+        }
+        \]
+
+        %---------------- RIGHT COLUMN ----------------
+        \column{0.48\textwidth}
+
+        \textbf{Interpretation}
+
+        \begin{itemize}
+            \item KF: optimal \emph{information extraction}
+            \item LQR: optimal \emph{control action}
+            \item LQG: optimal closed-loop system
+        \end{itemize}
+
+    \end{columns}
+
+}
+
+%--------------------------
+\myframe{Additional resources}{
+
+\begin{itemize}
+    \item https://github.com/mintisan/awesome-kalman-filter?tab=readme-ov-file
+    \item https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python
+    \item https://kalmanfilter.net/
+\end{itemize}
+}

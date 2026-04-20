@@ -1,0 +1,54 @@
+\documentclass[10pt]{beamer}
+
+% Theme and color scheme
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% packages
+\usepackage{amsmath}
+\usepackage{calc}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+
+
+% Title page information
+\title[Linear and Nonlinear KF]{Linear and Nonlinear Kalman Filtering: theory and applications}
+\subtitle{SCUDO Ph.D. course A.Y. 2026}
+\author{Marco Todescato}
+\institute[FHI]{Fraunhofer Italia Research SCARL}
+\date{\today}
+
+% to remove nav symbols
+% \setbeamertemplate{navigation symbols}{}
+
+\input{commands.tex}
+\input{definitions.tex}
+
+
+% \setlength{\parskip}{10pt}
+
+\begin{document}
+
+% Title frame
+\myframe{}{\titlepage}
+
+% outline
+\myframe{Outline}{\tableofcontents}
+
+
+% SECTIONS
+\input{src/general_info.tex}
+\input{src/preliminaries.tex}
+\input{src/linear_theory.tex}
+\input{src/non_linear_theory.tex}
+\input{src/adds_on.tex}
+
+
+%--------------------------
+\myframe{}{
+\centering
+\LARGE
+End! Thank you!
+}
+
+\end{document}

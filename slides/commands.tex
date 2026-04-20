@@ -1,0 +1,44 @@
+
+\newcommand{\myframe}[2]{%
+\begin{frame}%
+    \frametitle{#1}%
+    #2%
+\end{frame}
+}
+
+\newcommand{\sectionframe}[2]{%
+\begin{frame}[c]%
+    \centering
+        \begin{enumerate}
+            \setcounter{enumi}{\numexpr#1-1\relax}
+            \item \textcolor{blue}{#2} 
+        \end{enumerate}%
+\end{frame}
+}
+
+% def
+\newcommand{\tq}[1]{\textquotedblleft#1\textquotedblright}
+
+%maths
+\newcommand{\inner}[2]{\langle#1,#2\rangle}
+\newcommand{\spn}[1]{\operatorname{span}\left\{#1\right\}}
+\newcommand{\clspn}[1]{\overline{\operatorname{span}}\left\{#1\right\}}
+\newcommand{\until}[1]{\left\{1,\ldots,#1\right\}}
+\newcommand{\cls}[1]{\operatorname{cls}\left\{#1\right\}}
+\newcommand{\Hpast}[1]{\H^{-}_{#1}}
+\newcommand{\Hfuture}[1]{\H^{+}_{#1}}
+
+\newcommand{\todo}[1]{\textcolor{red}{TODO: #1}}
+
+% \customblock{type}{title}{content}  %snapping block to content size
+\newcommand{\customblock}[3]{%
+    \begin{center}
+        \begin{minipage}{\widthof{#3}+.5cm}
+            \begin{#1}{#2}
+                \centering
+                #3
+            \end{#1}
+        \end{minipage}
+    \end{center}
+}
+

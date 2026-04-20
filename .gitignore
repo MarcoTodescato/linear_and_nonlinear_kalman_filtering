@@ -1,0 +1,15 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+
+__pycache__
+*.pyc
+build
+.ipynb_checkpoints
