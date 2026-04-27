@@ -41,15 +41,18 @@ Suppose we observe weather over 2 consecutive days where weather can be:
     \item $\rho$: rainy
 \end{itemize}
 
+\pause
 \medskip
 Then we have that:
 \begin{itemize}
     \item $S:=\{(\sigma,\sigma),(\sigma,\rho),(\rho,\sigma),(\rho,\rho)\}$ the trajectories.
+    \pause
     \item $\S$ could be $\{E_1,E_2\}$ where
     \begin{itemize}
         \item $E_1$: \textit{it rains at least one day} $:= \{(\sigma,\rho),(\rho,\sigma),(\rho,\rho)\}$ 
         \item $E_2$: \textit{the first sunny day} $:= \{(\sigma,\sigma),(\sigma,\rho)\}$
     \end{itemize}
+    \pause
     \item $P$: assume weather is independent across days with $P[\sigma]=0.7$ and $P[\rho]=0.3$. Then
     \begin{itemize}
         \item $P[E_1] = (0.7 * 0.3) + (0.3 * 0.7) + (0.3 * 0.3) = 0.51$ 
@@ -70,14 +73,17 @@ Assume there is a small robot moving on a 1D line. At each time it can either
 We observe trajectories of 2-steps $(x_0,x_1,x_2)$ starting from $x_0=0$.
 
 \medskip
+\pause
 Then we have that:
 \begin{itemize}
     \item $S:=\{(0,0,0),(0,0,1),(0,1,1),(0,1,2)\}$ the trajectories.
+    \pause
     \item $\S$ could be $\{E_1,E_2\}$ where
     \begin{itemize}
         \item $E_1$: \textit{the robot moves at $t=1$} $:= \{(0,1,1),(0,1,2)\}$ 
         \item $E_2$: \textit{the robot never moves} $:= \{(0,0,0)\}$
     \end{itemize}
+    \pause
     \item $P$: assume independent movements $P[0]=0.7$ and $P[+1]=0.3$. Then
     \begin{itemize}
         \item $P[E_1] = (0.3 * 0.7) + (0.3 * 0.3) +  = 0.3$ 
