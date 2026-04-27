@@ -11,7 +11,8 @@
         \item $T$ is the set of time. We consider discrete-time signals, $T=\Z$
         \item $V$ is the \tq{alphabet} of signal values, $V=\R$ or $V=\R^n$
         \item $S$ is the sample space. Every $s\in S$ is a function $s:t\mapsto s(t)$
-        where $t\in T$ and $s(t) \in V$ also called \textit{trajectory} of the signal
+        where $t\in T$ and $s(t) \in V$ also called \textit{trajectory} of the signal.
+        $S$ specifies the a-priori admissible trajectories for the signal.
     \end{itemize}
 \end{block}
 
@@ -22,12 +23,71 @@
     nature of a random signal. Consisting of the tuple $(S,\S, P)$ where:
     \begin{itemize}
         \item $S$ sample space. Set of all possible trajectories
-        \item $\S$ events set of all logical propositions or events regarding the signal
+        \item $\S$ set of all logical meaningful \underline{propositions or
+        events} regarding the signal
         \item $P$ probability measure on $\S$, i.e. $P: \S\mapsto [0,1]$ mapping
         every $A\in\S$ to $P(A)\in[0,1]$, the a-priori
         \tq{confidence} $A$ actually happening
     \end{itemize}
 \end{block}
+}
+
+%--------------------------
+\myframe{Stochastic process: weather example}{%
+
+Suppose we observe weather over 2 consecutive days where weather can be:
+\begin{itemize}
+    \item $\sigma$: sunny
+    \item $\rho$: rainy
+\end{itemize}
+
+\medskip
+Then we have that:
+\begin{itemize}
+    \item $S:=\{(\sigma,\sigma),(\sigma,\rho),(\rho,\sigma),(\rho,\rho)\}$ the trajectories.
+    \item $\S$ could be $\{E_1,E_2\}$ where
+    \begin{itemize}
+        \item $E_1$: \textit{it rains at least one day} $:= \{(\sigma,\rho),(\rho,\sigma),(\rho,\rho)\}$ 
+        \item $E_2$: \textit{the first sunny day} $:= \{(\sigma,\sigma),(\sigma,\rho)\}$
+    \end{itemize}
+    \item $P$: assume weather is independent across days with $P[\sigma]=0.7$ and $P[\rho]=0.3$. Then
+    \begin{itemize}
+        \item $P[E_1] = (0.7 * 0.3) + (0.3 * 0.7) + (0.3 * 0.3) = 0.51$ 
+        \item $P[E_2] = 0.7^2 + (0.7 * 0.3) = 0.7$
+    \end{itemize}    
+\end{itemize}
+}
+
+%--------------------------
+\myframe{Stochastic process: robot navigation example}{%
+
+Assume there is a small robot moving on a 1D line. At each time it can either
+\begin{itemize}
+    \item move to the right: $+1$
+    \item stay still: $0$
+\end{itemize}
+
+We observe trajectories of 2-steps $(x_0,x_1,x_2)$ starting from $x_0=0$.
+
+\medskip
+Then we have that:
+\begin{itemize}
+    \item $S:=\{(0,0,0),(0,0,1),(0,1,1),(0,1,2)\}$ the trajectories.
+    \item $\S$ could be $\{E_1,E_2\}$ where
+    \begin{itemize}
+        \item $E_1$: \textit{the robot moves at $t=1$} $:= \{(0,1,1),(0,1,2)\}$ 
+        \item $E_2$: \textit{the robot never moves} $:= \{(0,0,0)\}$
+    \end{itemize}
+    \item $P$: assume independent movements $P[0]=0.7$ and $P[+1]=0.3$. Then
+    \begin{itemize}
+        \item $P[E_1] = (0.3 * 0.7) + (0.3 * 0.3) +  = 0.3$ 
+        \item $P[E_2] = 0.7^2 = 0.49$
+    \end{itemize}  
+\end{itemize}
+
+\vspace{0.5cm}
+
+\textbf{Obviously this can easily be made more complicated to describe more meaningful events.}
 }
 
 
@@ -51,9 +111,8 @@
 
 \pause
 
-Our definition $(S,\S,P)$ is a \tq{concrete} version of the abstract
-$(\Omega,\A,P)$. If we define a variable
-$y(t)\in(S,\S,P)$ as
+Our definition $(S,\S,P)$ is a \tq{concrete path-based} version of the abstract
+$(\Omega,\A,P)$. If we define a variable $y(t)\in(S,\S,P)$ as
 %
 $$
 y(t,s) := s(t)
@@ -69,15 +128,22 @@ trajectory $\{\overline{s}(t)\}$ of the process.
 
 The probabilistic formulation and formalization introduced is \textit{just} a
 convenient choice to describe (or model) the unpredictable nature of a signal.
+
+\medskip
 It is worth remembering that this is one possible choice that eventually
 allows one to resort to tools from probability theory to describe, handle and
-develop useful tools for filtering and identification. For this reason, it is
-important to understand that, regardless the real nature of the underline
-signal, the same formulation (as \textit{stochastic process}) can indeed be used
-to describe every signal (aleatoric or not). On the other hand, it might be
-worth remembering that this choice is dictated by the \tq{simplicity},
-compactness and generality to describe events that could indeed also be
-described using a \tq{deterministic} formulation.
+develop useful tools for filtering and identification.
+
+\medskip
+For this reason, it is important to understand that, regardless the real nature
+of the underline signal, the same formulation (as \textit{stochastic process})
+can indeed be used to describe every signal (aleatoric or not).
+
+\medskip
+On the other hand, it might be worth remembering that this choice is dictated by
+the \tq{simplicity}, compactness and generality to describe events that could
+indeed also be described using a \tq{deterministic} formulation.
+
 }
 
 %--------------------------
