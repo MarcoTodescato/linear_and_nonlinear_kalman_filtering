@@ -39,7 +39,9 @@ Other OS are not convered nor tested.
 - [Docker](https://docs.docker.com/get-docker/) : follow instruction to install [docker engine](https://docs.docker.com/engine/install/ubuntu/) and [post-installation setup](https://docs.docker.com/engine/install/linux-postinstall/). Using [apt repo's](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) is recommended.
 - [Docker Compose](https://docs.docker.com/compose/): using [apt repo's](https://docs.docker.com/compose/install/linux/#install-using-the-repository) recommended.
 
-For Windows users, using WSL is recommended. Another option is to use native Docker Desktop for Windows.
+For Windows users, using
+[WSL](https://learn.microsoft.com/en-us/windows/wsl/install) is recommended.
+Another option is to use native [Docker Desktop for Windows](https://docs.docker.com/desktop/setup/install/windows-install/).
 
 ---
 
