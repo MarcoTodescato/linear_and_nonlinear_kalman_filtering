@@ -7,7 +7,6 @@ This is Python-based repo for the DAUSY course on Linear and Nonlinear Kalman Fi
 It contains some minimal code examples and a dockerized environment to work with
 Jupyter notebooks.
 
-
 ---
 
 ## 📁 Project Structure
@@ -29,9 +28,18 @@ root/
 
 ## 📋 Prerequisites
 
+Assuming installation on Ubuntu 22.04 or higher.
+
+Tested on Ubuntu 24.04 running on WSL (Windows Subsystem for Linux)
+
+Other OS are not convered nor tested.
+
+- Make: if not installed run `sudo apt update & sudo apt install build-essential`
 - [Python](https://www.python.org/)
-- [Docker](https://docs.docker.com/get-docker/)
-- [Docker Compose](https://docs.docker.com/compose/)
+- [Docker](https://docs.docker.com/get-docker/) : follow instruction to install [docker engine](https://docs.docker.com/engine/install/ubuntu/) and [post-installation setup](https://docs.docker.com/engine/install/linux-postinstall/). Using [apt repo's](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository) is recommended.
+- [Docker Compose](https://docs.docker.com/compose/): using [apt repo's](https://docs.docker.com/compose/install/linux/#install-using-the-repository) recommended.
+
+For Windows users, using WSL is recommended. Another option is to use native Docker Desktop for Windows.
 
 ---
 
