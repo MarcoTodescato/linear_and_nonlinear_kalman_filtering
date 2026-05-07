@@ -9,7 +9,7 @@ Material is divided as follows:
 * code: folder containing a handful of Jupyter notebooks with examples using different KF.
         Refer to the README.md file within the folder for further information.
 
-* slides: latex slide. These are mainly build from the book
+* slides: latex slide. These are mainly built from the book
 
     Picci, G. (2007). Filtraggio statistico (Wiener, Levinson, Kalman) e applicazioni. Libreria Progetto.
 
