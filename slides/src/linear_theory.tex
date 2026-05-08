@@ -449,9 +449,12 @@ x_{k+1} = A_o\,x_k + B_u\,u_k + B_e\,e_k,
 \qquad
 y_k = C_o\,x_k + D_u\,u_k + D_e\,e_k.
 \]
+%
+\pause
 where the \textbf{observable canonical matrices} are built as the dual of the
 controllable companion form, i.e., $A_o=A_c^\top$ and $C_o=B_c^\top$.
 
+\pause
 \vspace{-.5cm}
 \begin{align*}
     A_o &= A_c^\top =
@@ -485,7 +488,7 @@ controllable companion form, i.e., $A_o=A_c^\top$ and $C_o=B_c^\top$.
     \end{bmatrix}\quad D_u=b_0,\quad D_e=1
 \end{align*}
 
-
+\pause
 \medskip
 \begin{alertblock}{}
 \textbf{Observable form}: observability matrix from $(A_o, C_o)$ has
@@ -506,6 +509,7 @@ y_k = C\,x_k + D\,u_k + e_k.
 
 defined by interpreting $e_k = y_k-\hat y_{k|k-1}$ as innovation.
 
+\pause
 \medskip
 For monic ARMAX, a convenient choice, consistent with the controllable
 realization, is
@@ -513,16 +517,25 @@ realization, is
 A := A_c,\quad B := B_c,\quad C := (C_u+C_e),\quad D := D_u,\quad K := B_c,\quad D_e := 1,
 \]
 so that
+\vspace{-.5cm}
 \begin{align*}    
     x_{k+1} &= A_c\,x_k + B_c\,u_k + B_c\,e_k,\\
     y_k &= (C_u+C_e)\,x_k + D_u\,u_k + e_k.
 \end{align*}
 
-equivalent to the controllable form.
+% equivalent to the controllable form.
 
+\pause
 \medskip
 \begin{alertblock}{}
-\textbf{Innovation form}: the noise enters as a \emph{one-step-ahead prediction error}.    
+\textbf{Innovation form}: the noise enters as a \emph{one-step-ahead prediction error}.
+\end{alertblock}
+
+\pause
+\begin{alertblock}{}
+Note that in the above SS model there is some abuse of notation since to
+interpret $e_k$ as the innovation the model does not define the evolution of the
+\tq{true} state $x_k$ but rather of the prediction $\hat{x}_k$.
 \end{alertblock}
 
 }%
@@ -551,6 +564,7 @@ For consistency with the controllable ARMAX realization:
 A:=A_c,\quad B:=B_c,\quad C:=(C_u+C_e),\quad D:=D_u,\quad K:=B_c,
 \]
 
+\pause
 \medskip
 \begin{alertblock}{}
 \textbf{Observer (predictor) form}: state propagated using the measured
@@ -797,6 +811,7 @@ $\{\y(t)\}$
 \begin{tabular}{p{7cm}cc}
 As \textit{widely} known, the Kalman filter deals with
 estimation of the (unknown and usually not observable) state process $\{\x(t)\}$ &
+\pause
 $\Longrightarrow$ &
 \textbf{But why?}
 \end{tabular}
@@ -818,22 +833,29 @@ Two prototypical problems:
 \vspace{.3cm}
 \textbf{1. Prediction} of $\{\y(t)\}$ from past measurements.
 
+\pause
 \medskip
 By observing that $\w(t+1)\ \bot\ \{\v(s),\w(s),\xzero,s\leq t\}\supset\Hpast{t}(\y)$
 %
+\pause
 $$
 \Longrightarrow \yhat(t+1|t) = \Elin[\y(t+1)|\Hpast{t}(\y)] = C\Elin[\x(t+1)|\Hpast{t}(\y)]=C\xhat(t+1|t)
 $$
 
-\textbf{The prediction can be directly build from the predicted state!!}
+\pause
+\textbf{The prediction can be directly built from the predicted state!}
 
 \pause
 \vspace{.3cm}
 \textbf{2. Filtering} of $\{\z(t)\}$ from $\{\y(t)\}$
 
+\pause
 \medskip
 Say we want to filter $\z(t)$ from $\y(t)=\z(t)+\xiv(t)$ ($\xiv$ \tq{colored noise}).
+\pause
+Assume the following SS representation for the processes:
 %
+\pause
 \begin{align*}
     \x(t+1) &=
         \begin{bmatrix}
@@ -888,19 +910,24 @@ $$
 \pause
 Nonetheless, via double projection (on subspaces)
 %
+\pause
 \begin{align*}
-    \what_1(t) &= \Elin\left[\Elin\left[\w_1(t)| \{\xzero, \v(s-1), \w(s); s\leq t\}\right] | \Hpast{t}(\y)\right]\\
+    \what_1(t|t) &= \Elin\left[\Elin\left[\w_1(t)| \{\xzero, \v(s-1), \w(s); s\leq t\}\right] | \Hpast{t}(\y)\right]\\
     &= \Elin\left[R_1R^{-1}\w(t) | \Hpast{t}(\y)\right]\\
     &= R_1R^{-1}\what(t|t)\\ 
-    &= R_1R^{-1}\left(\y(t) - C\xhat(t|t)\right) \\
-    & \\
-    \Longrightarrow\ & \zhat(t|t) = \overline{C}_1\xhat(t|t) + R_1R^{-1}\left(\y(t) - C\xhat(t|t)\right)
+    &= R_1R^{-1}\left(\y(t) - C\xhat(t|t)\right)
 \end{align*}
+
+\vspace{-.5cm}
+\pause
+\[
+    \Longrightarrow\quad  \zhat(t|t) = \overline{C}_1\xhat(t|t) + R_1R^{-1}\left(\y(t) - C\xhat(t|t)\right)
+\]
 
 \pause
 \begin{alertblock}{}
-    \textbf{Again, the filtering solution can be directly build for the filtered
-    state!!}
+    \textbf{Again, the filtering solution can be directly built for the filtered
+    state!}
 \end{alertblock}
 }
 
@@ -918,14 +945,16 @@ Nonetheless, via double projection (on subspaces)
 
 \pause
 \medskip
-Note that $\E[\v(t),\w(t)^T]=S$ but $\v(s)\perp\w(s),\ s\neq t$.
+Note that $\E[\v(t),\w(t)^T]=S$ but $\v(s)\perp\w(t),\ s\neq t$.
 
+\pause
 \begin{align*}
-    \Longrightarrow \verr(t) = \v(t) - \Elin[\v(t)|\H(\w)] &= \v(t) - \Elin[\v(t)|w(t)]\qquad \perp \w(t)\\
+    \Longrightarrow \verr(t) = \v(t) - \Elin[\v(t)|\H(\w)] &= \v(t) - \Elin[\v(t)|\w(t)]\qquad \perp \w(t)\\
     &= \v(t) - SR^{-1}\w(t)\\
     \Longrightarrow \Var\begin{bmatrix} \verr(t)\\ \w(t)\end{bmatrix} = \begin{bmatrix}\tilde{Q} &  \\  & R \end{bmatrix},\quad\,\,\, & \tilde{Q}=Q-SR^{-1}S^T
 \end{align*}
 
+\pause
 $$
     \Longrightarrow \x(t+1) = A\x(t) + \v(t) = F\x(t) + SR^{-1}\y(t) + \verr(t),\quad F=A-SR^{-1}C
 $$
@@ -1106,6 +1135,7 @@ It is often useful to express the dynamics of the predictor which allows to
 express the next state prediction as function of the previous without computing
 the filtered value. That is (after some manipulation)
 %
+\pause
 \begin{align*}
     \xhat(t+1|t) &= F(I - L(t)C)\xhat(t|t-1) + (FL(t) + SR^{-1})\y(t)\\
                  &= (F - K(t)C)\xhat(t|t-1) + (K(t) + SR^{-1})\y(t)\\
