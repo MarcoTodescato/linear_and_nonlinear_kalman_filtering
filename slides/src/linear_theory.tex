@@ -68,20 +68,25 @@
 
 Given $\H(\y)\subset\H$, $\forall \x\in\H$
 
+\pause
 $$
 \x = \xhat + \tilde{\x}
 $$
 
+\pause
 where $\xhat\in\H(\y)$ is the orthogonal projection (also denoted as
 $\Elin[\x|\H(\y)]$) of $\x$ onto $\H(\y)$ and $\tilde{\x}\bot\H(\y)$
 
 \vspace{.5cm}
 
 \begin{itemize}
+    \pause
     \item (idempotent) $\Elin\left[\Elin[\cdot|\H(\y)]\right] = \Elin[\cdot|\H(\y)]$
+    \pause
     \item if $\H(\y_1)\subset\H(\y_2)$, $\Elin\left[\Elin[\cdot|\H(\y_2)]|\H(\y_1)\right] = \Elin[\cdot|\H(\y_1)]$
 \end{itemize}
 
+\pause
 In particular if $s<t$
 
 $$
@@ -94,7 +99,9 @@ $$
 
 \myframe{State Space models}{%
 Let $\{\y(t)\}$ an $m$-dimensional stochastic process defined on $[t_0,
-\infty)$. We say it is a \textit{finite dimensional process} if we can express
+\infty)$. 
+\pause
+We say it is a \textit{finite dimensional process} if we can express
 it as
 
 \begin{align*}
@@ -216,7 +223,7 @@ described by
         \begin{cases}
             CA^{t-s-1}G(s),\quad &t>s\\
             C\Sigma(t)C^T + DD^T,\quad &t=s\\
-            G(t)^T(A^T)^{s-t-1}C^T,\quad &t>s
+            G(t)^T(A^T)^{s-t-1}C^T,\quad &t<s
         \end{cases}\\
     G(s) &= A\Sigma(s)C^T + BD^T\\
 \end{align*}
@@ -240,7 +247,8 @@ in the relation between the Wiener-Kolmogorov and Kalman theories.
 
 \pause
 Assuming $A,B,C,D$ are constant, if $\rho(A)<1$ (asymptotically stable):
-\begin{itemize}    
+\begin{itemize}
+    \pause
     \item $\mux(t+1)=A\mux(t) \to 0$
     
     \pause
@@ -298,23 +306,31 @@ Often, in practical scenarios, $S=0$ i.e. uncorrelated process and measurement n
 (With a change of notation) Consider a discrete time ARMAX (Auto-Regressive Moving Average Exhogenous) model,
 extremely common to represent input/output relations:
 
+\pause
+$$
+A(z^{-1})\,y_k = B(z^{-1})\,u_k + C(z^{-1})\,e_k,\qquad e_k \sim (0,\sigma^2)
+$$
+%
+\pause
+\vspace{-.5cm}
 \begin{align*}
-&A(z^{-1})\,y_k = B(z^{-1})\,u_k + C(z^{-1})\,e_k,\qquad e_k \sim (0,\sigma^2)\\
 &A(z^{-1}) = 1 + a_1 z^{-1} + \cdots + a_{n_a} z^{-n_a},\\
 &B(z^{-1}) = b_0 + b_1 z^{-1} + \cdots + b_{n_b} z^{-n_b},\\
 &C(z^{-1}) = 1 + c_1 z^{-1} + \cdots + c_{n_c} z^{-n_c}.
 \end{align*}
 
+\pause
 \begin{itemize}
     \item ARMA: $B=0$ or $u=0$
     \item ARX: $C=1$ 
 \end{itemize}
 
+\pause
 \textbf{Assumptions (for simplicity):}
 \begin{itemize}
     \item Scalar (input and output, SISO) processes. For MIMO processes,
     generalization using matrix polynomials
-    \item $A(z^{-1})$ and $C(z^{-1})$ are already monic (higher order coeff. =1)
+    \item $A(z^{-1})$ and $C(z^{-1})$ are already monic (highest order coeff. =1)
 \end{itemize}
 }
 
@@ -326,13 +342,14 @@ The ARMAX description in transfer functions terms can be written:
 \[
 y_k = \frac{B(z^{-1})}{A(z^{-1})}u_k + \frac{C(z^{-1})}{A(z^{-1})}e_k
 \]
-
+\pause
 An equivalent state space form with state $x_k\in\R^{n_a}$ is
 \[
 x_{k+1} = A_c\,x_k + B_c\,u_k + B_c\,e_k,
 \qquad
 y_k = (C_u+C_e)\,x_k + D_u\,u_k + D_e\,e_k.
 \]
+\pause
 \vspace{-.5cm}
 \begin{align*}
     A_c &=
@@ -354,6 +371,7 @@ y_k = (C_u+C_e)\,x_k + D_u\,u_k + D_e\,e_k.
     C_e = \begin{bmatrix}c_1-a_1 & \cdots & c_n-a_n\end{bmatrix}
 \end{align*}
 
+\pause
 \begin{alertblock}{}
 \textbf{Controllable form}: controllability matrix from $(A_c, B_c)$ has
 full rank, i.e., the system is controllable (input drives the state everywhere

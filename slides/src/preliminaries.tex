@@ -456,9 +456,12 @@ for unimodal symmetric densities).
 Interpreting $\E[\x|\y]$ as the Bayesian estimator of $\x$ given $\y$, notice
 that:
 \begin{itemize}
+    \pause
     \item the estimation error is defined as: $\tilde{\x}:=\x-\E[\x|\y]$
+    \pause
     \item $\tilde{\x}$ is independent from the data, i.e., all available info
     has been exploited
+    \pause
     \item $\Var[\x|\y]$ (cond. var. of $\x|\y$) can be understood as
     $\Sigma_{\tilde{\x}}$ (uncond. var. of $\tilde{\x}$), does not depend on the
     data, and is given by the difference between $\Sigma_\x$ and
@@ -500,7 +503,7 @@ that:
     \begin{align*}
         \Longrightarrow \overline{\x}=\tilde{\x}-A\overline{\y}
             \Longrightarrow &\E[\overline{\x}|\overline{\y}]=-A\overline{\y}=\Sigma_{\x\y}\Sigma_{\y}^{-1}\overline{\y}\\
-                            & \Var[\overline{x}|\overline{\y}]=\Sigma_{\tilde{\x}} = \Sigma_{\x} - \Sigma_{\x\y}\Sigma_{\y}^{-1}\Sigma_{\y\x}
+                            & \Var[\overline{\x}|\overline{\y}]=\Sigma_{\tilde{\x}} = \Sigma_{\x} - \Sigma_{\x\y}\Sigma_{\y}^{-1}\Sigma_{\y\x}
     \end{align*}
 
     Introducing the means you get the final result.
@@ -511,14 +514,15 @@ that:
 %--------------------------
 \myframe{Conditional Expectation: brief recap}{%
 
-    So far we said that:
+    So far we can say/note that:
 
     \medskip
     \begin{itemize}
         \pause
         \item $\E[\x|\y]$ is the function $g(\cdot)$ of the data $\y$ that
         minimizes $\E\|\x-g(\y)\|_Q^2$ among the (vast) class of measurable
-        functions that are also unbiased, i.e., $\E[g(\y)]=\E[\x]$;
+        functions. Also it is unbiased, i.e., $\E[g(\y)]=\E[\x]$ (from law of
+        total expectation. Check for the Gaussian case);
         
         \pause
         \item for $Q=I$, $\E\|\x-g(\y)\|^2_Q$ is the scalar variance of the
@@ -547,6 +551,8 @@ that:
 Restricting $g(\cdot)$ to the family of linear unbiased functions of $\y$, we
 have
 
+\pause
+
 \begin{block}{Linear MMSE Estimator: the Problem (vector form)}
     The Linear MMSE Estimator is the linear function of the data
     $$
@@ -558,11 +564,17 @@ have
     \min_{A,b} \E\|A\y+b-\x\|^2.
     $$
 \end{block}
+
+\pause
+
+\vspace{1cm}
+Before jumping to the solution...
 }
 
 %--------------------------
 \myframe{Minimum introduction to Hilbert spaces}{%
 
+\pause
 A Hilbert space $\H$ is a vector space (over $\R$ or $\C$) equipped with an
 inner product $\inner{\cdot}{\cdot}$ which is complete w.r.t. the norm
 $\|x\|=\sqrt{\inner{x}{x}}$ induced by the inner product. That is, every Cauchy
@@ -570,14 +582,17 @@ sequence converges with respect to $\|\cdot\|$.
 
 \vspace{5mm}
 
+\pause
 Examples:
 \begin{itemize}
     \item $\R^n$ endowed with the standard Euclidean inner product;
+    \pause
     \item $L^2(\Omega, \A, P)$ of second order variables of a random experiment
     $\{\Omega, \A, P\}$: the space of variables $f$, $\E[|f|^2]<\infty$ (mean
     squared integrable $\equiv$ finite variance), with inner product
     $\inner{\xi}{\eta}=\E[\xi\overline{\eta}]$ given by the correlation between
     variables;
+    \pause
     \item $\H(\y) := \spn{\y_1,\ldots,\y_m} = \left\{\sum_{i=1}^m a_i\y_i;\
     a_i\in\R\right\} \subseteq L^2(\Omega, \A, P)$ \textit{linearly} generated
     by the second order random process $\y$ (collection of variables) with
@@ -654,27 +669,34 @@ have
 
 %--------------------------
 \myframe{Notation disclaimer}{%
+
 \customblock{alertblock}{}{$\Elin[\x|\y] \neq \E[\x|y]$}
 
 \vspace{.5cm}
 
 \begin{itemize}
-    \item $\E[\x|y]$ minimum variance estimator = conditional mean
+    \pause
+    \item $\E[\x|\y]$ minimum variance estimator = conditional mean
+    \pause
     \item $\Elin[\x|\y]$ linear minimum variance estimator $\neq$ conditional mean
+    \pause
     \item $\Elin[\x|\y]$ in general depends only on up to second order statistics
+    \pause
     \item $\Elin[\x|\y]$ sometimes referred to as \textbf{weak conditional mean}
+    \pause
     \item $\Elin[\x|\y] = \E[\x|y]$ for jointly Gaussian densities
+    \pause
     \item $\Elin[\x|\y]$ very \tq{far} from conditional mean for general densities
 \end{itemize}
 
 }
 
-%--------------------------
-\myframe{Example with code}{%
-Before looking at more theory ... a first example of Kalman Filtering!
+% %--------------------------
+% \myframe{Example with code}{%
+% Before looking at more theory ... a first example of Kalman Filtering!
 
-\vspace{1.5cm}
+% \vspace{1.5cm}
 
-Jupyter notebook: \texttt{linear\_constant\_velocity.ipynb}
+% Jupyter notebook: \texttt{linear\_constant\_velocity.ipynb}
 
-}
+% }
