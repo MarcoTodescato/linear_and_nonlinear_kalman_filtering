@@ -301,7 +301,7 @@ Often, in practical scenarios, $S=0$ i.e. uncorrelated process and measurement n
 
 
 %--------------------------
-\myframe{(Some) Realization techniques}{%
+\myframe{(Some) Realization techniques: stationary processes}{%
 
 (With a change of notation) Consider a discrete time ARMAX (Auto-Regressive Moving Average Exhogenous) model,
 extremely common to represent input/output relations:
@@ -579,8 +579,13 @@ be available.
 
 
 %--------------------------
-\myframe{Realization: Continuous to Discrete (Exact) (part 1)}{%
+\myframe{Discretization: CT to DT (Exact) (part 1)}{%
 
+In some case, the SS model is already available but it is in CT. Hence one might
+want to discretize it.
+
+\pause
+\medskip
 Consider a general CT model
 %
 \begin{align*}
@@ -605,7 +610,7 @@ x_{k+1}=e^{AT}x_k+\left(\int_{0}^{T} e^{A(T-\tau)}B\,d\tau\right)u_k
 \]
 }
 
-\myframe{Realization: Continuous to Discrete (Exact) (part 2)}{
+\myframe{Discretization: CT to DT (Exact) (part 2)}{
 
 With the change of variable $\sigma=T-\tau$ and output sampling, we get:
 \begin{align*}
@@ -636,9 +641,11 @@ techniques, e.g. Forward/Backward Euler etc.
 %--------------------------
 \myframe{Example of non-stationary process}{%
 
-A process is \textbf{stationary} when its statistical properties (mean, variance,
-autocorrelation) do not change over time. Typically arise from \textbf{stable systems}.
-
+A process is \textbf{stationary} when its statistical properties (mean,
+variance, autocorrelation) do not change over time. Typically arise from
+\textbf{stable systems}. For ARMAX representations it essentially means that the
+poles of the transfer function (i.e. the root of $A(z^{-1})$) being inside the
+unit circle. Examples are:
 \begin{itemize}
     \item thermal noise in an electrical resistor
     \item vibrations in mechanical systems
@@ -656,10 +663,13 @@ Often caused by: integration, accumulation, system drift.
     \item position of a vehicle (tracking navigation)
     \item financial asset prices
 \end{itemize}
+
+\pause
+$\Longrightarrow$ Ofter captured/modeles using ARIMA models.
 }
 
 %--------------------------
-\myframe{State-Space Derivation of ARIMA$(p,d,q)$ (part 1)}{
+\myframe{ARIMA$(p,d,q)$}{
 
 Let $\Delta := 1-z^{-1}$ (difference operator). An ARIMA$(p,d,q)$ process satisfies
 \[
@@ -681,11 +691,19 @@ Then
 A(q^{-1})\,z_k = C(q^{-1})\,e_k
 \]
 is an ARMA$(p,q)$ model for $z_k$.
+
+\pause
+\begin{alertblock}{}
+    Note that algebraically ARIMA(p,d,q)=ARMA(p+d,q). However, the $d$ roots are
+    now on the unit circle due to the integrators which would mean
+    \tq{non-stationary} ARMA which in turn does not make to much sense in
+    standard time-series terminology.
+\end{alertblock}
 }
 
 %--------------------------
-\myframe{State-Space Derivation of ARIMA$(p,d,q)$ (part 2)}{
-Find a $n$-dim innovation realization ($n=\max\{p,q+1\}$) for the ARMA for $z_k$
+\myframe{ARIMA$(p,d,q)$: State-Space Derivation }{ Find a $n$-dim realization
+($n=\max\{p,q+1\}$) for the ARMA for $z_k$ (e.g. in innovation form)
 \[
 x^z_{k+1} = A_z\,x^z_k + K_z\,e_k,\qquad
 z_k = C_z\,x^z_k + e_k,
@@ -701,11 +719,12 @@ s^{(1)}_{k+1} = s^{(1)}_k + z_{k+1},\quad \dots,\quad
 s^{(d)}_{k+1} = s^{(d)}_k + s^{(d-1)}_{k+1},
 \]
 
+\pause
 Equivalently, with $s_k := \begin{bmatrix}s^{(1)}_k&\cdots&s^{(d)}_k\end{bmatrix}^\top$ and
-$T_d$ the \tq{cumulative-sum} matrix:
+$T_d$ the lower triangular \tq{cumulative-sum} matrix of all $1$'s:
 %
 \[
-s_{k+1} = T_d\,s_k + b_d\,z_{k+1},\quad y_k = e_d^\top s_k,\quad b_d^\top=e_d^\top=\begin{bmatrix}0, \dots, 0, 1\end{bmatrix}
+s_{k+1} = T_d\,s_k + b_d\,z_{k+1},\quad y_k = e_d^\top s_k,\quad b_d^\top=\begin{bmatrix}1, 1, \dots, 1\end{bmatrix},\ e_d^\top=\begin{bmatrix}0, \dots, 0, 1\end{bmatrix}
 \]
 
 \pause
@@ -738,56 +757,162 @@ using the ARMA equations
 }
 
 %--------------------------
-\myframe{Example: tracking in 2D}{
+\myframe{ARIMA(1,2,1) Example (part 1)}{
 
-Assume random acceleration driving the motion. The particle position motion is
-\begin{align*}
-\p_{k+1} &= \p_k + T\v_{k}, \qquad \p_k= \begin{bmatrix} x_k \\ y_k \end{bmatrix}\\
-\v_{k+1} &= \v_{k} + T\a_{k},\qquad \a_{k}\sim WN(\mathbf{0}, \sigma^2_aI_2)
-\end{align*}
-
-\pause
-Removing $\v_k$, the position satisfies the ARIMA$(0,2,0)$ model
-\begin{align*}
-    (1 - z^{-1})^2 \p_k &= \mathbf{p}_k - 2\mathbf{p}_{k-1} + \mathbf{p}_{k-2} = \e_k,
-    \quad
-    \mathbf{e}_k \sim WN(\mathbf{0},Q),\quad Q=T^2\sigma^2_aI_2\\
-    \y_k &= \p_k + \w_k,\quad\w_k \sim WN(\mathbf{0},R)\quad \text{(measurements)}.
-\end{align*}
+Consider the following ARIMA(1,2,1)
+%
+$$
+(1 + a_1z^{-1})(1-z^{-1})^2y_k = (1 + c_1z^{-1})e_k
+$$
+where $\Delta^2=(1-z^{-1})^2=1-2z^{-1}+z^{-2}$.
 
 \pause
 \medskip
-Following the above describe realization procedure, the state space model reads
-
+We define $z_k=\Delta^2y_k$ and derive a SS representation for its ARMA(1,1)
+model. E.g. controllable companion form that is
+%
 \begin{align*}
-    \x_{k+1} &=
-    \begin{bmatrix}
-        1 & 0 & T & 0 \\
-        0 & 1 & 0 & T \\
-        0 & 0 & 1 & 0 \\
-        0 & 0 & 0 & 1
-    \end{bmatrix}
-    \x_k
-    +
-    \begin{bmatrix}
-        0 & 0 \\
-        0 & 0 \\
-        1 & 0 \\
-        0 & 1
-    \end{bmatrix}
-    \a_k,
-    \quad
-    \a_k \sim WN(\mathbf{0},\sigma^2_aI_2).\\
-    %
-    \y_k &=
+    x^z_{k+1} = -a_1 x^z_{k} + e_k,\quad
+    z_{k} = (c_1-a_1) x^z_{k} + e_k
+\end{align*}
+
+\pause
+
+We add 2 integrators $s_k = [s^{(1)}_k, s^{(2)}_k]^T$ for which we can write
+%
+\begin{align*}
+    s_{k+1} &= \begin{bmatrix} 1 & 0 \\ 1 & 1\end{bmatrix} s_k + \begin{bmatrix} 1 \\ 1\end{bmatrix} z_{k+1},\quad
+    y_k = \begin{bmatrix} 0 & 1\end{bmatrix}s_k
+\end{align*}
+
+\pause
+Combining the models ($x_k=[x^z_k,s^{(1)}_k, s^{(2)}_k]^T$) we finally get
+%
+\begin{align*}
+    x_{k+1} &= 
         \begin{bmatrix}
-            1 & 0 & 0 & 0 \\
-            0 & 1 & 0 & 0
+            -a_1 & 0\\
+            -\begin{bmatrix} 1 \\ 1\end{bmatrix} (c_1-a_1)a_1 & \begin{bmatrix} 1 & 0 \\ 1 & 1\end{bmatrix}
         \end{bmatrix}
-    \x_k + \w_k\qquad\qquad\qquad \w_k \sim WN(\mathbf{0},R).
+        x_k
+        +
+        \begin{bmatrix}
+            1\\
+            \begin{bmatrix} 1 \\ 1\end{bmatrix} (c_1-a_1)
+        \end{bmatrix}
+        e_k
+        +
+        \begin{bmatrix}
+            0\\
+            \begin{bmatrix} 1 \\ 1\end{bmatrix}
+        \end{bmatrix}
+        e_{k+1},\\
+    y_k &= \begin{bmatrix}0 & \begin{bmatrix} 0 & 1 \end{bmatrix}\end{bmatrix} x_k.
+\end{align*}
+}
+
+%--------------------------
+\myframe{ARIMA(1,2,1) Example (part 2)}{
+
+One could investigate if the SS model does indeed correspond to the original
+ARIMA(1,2,1) model, e.g., checking the transfer function $G(z)$ for I/O behavior.
+
+\pause
+\begin{align*}
+    G(z) &= \resizebox{.9\textwidth}{!}{%
+        $\begin{bmatrix}0 & \begin{bmatrix} 0 & 1 \end{bmatrix}\end{bmatrix}
+        \underbrace{\left(
+            zI - \begin{bmatrix} -a_1 & 0\\ -\begin{bmatrix} 1 \\ 1\end{bmatrix} (c_1-a_1)a_1 & \begin{bmatrix} 1 & 0 \\ 1 & 1\end{bmatrix}\end{bmatrix}
+        \right)^{-1}}_{\begin{bmatrix} * & * & * \\ * & * & * \\ -\frac{a_1z(c_1-a_1)}{(z+a_1)(z-1)^2} & \frac{1}{(z-1)^2} & \frac{1}{z-1} \end{bmatrix}}
+        \left(
+            z\begin{bmatrix} 0\\ \begin{bmatrix} 1 \\ 1\end{bmatrix} \end{bmatrix} + 
+            \begin{bmatrix} 1\\ \begin{bmatrix} 1 \\ 1\end{bmatrix} (c_1-a_1) \end{bmatrix}
+        \right)$}\\
+    &= -\frac{a_1z(c_1-a_1)}{(z+a_1)(z-1)^2} + \frac{z+c_1-a_1}{(z-1)^2} + \frac{z+c_1-a_1}{z-1}\\
+    &= \frac{z^2(z+c_1)}{(z+a_1)(z-1)^2}\\
+    &= \frac{1+c_1z^{-1}}{(1+a_1z^{-1})(1-z^{-1})^2}\quad \Longrightarrow\ \text{The original ARIMA}
 \end{align*}
 
 }
+
+%--------------------------
+\myframe{ARIMA Example: tracking in 2D}{
+
+What about a non-fictitious example of ARIMA?
+
+\pause
+\medskip
+Consider for instance a very simple ARIMA$(0,2,0)$ model such as
+%
+$$
+    (1 - z^{-1})^2 x_k = x_k - 2x_{k-1} + x_{k-2} = e_k
+$$
+
+where $e_k \sim WN(0,Q)$, $Q=T^2\sigma^2_aI_2$ and measurements
+%
+$$
+    y_k = x_k + w_k,\quad w_k \sim WN(0,R)
+$$
+
+\pause
+\medskip
+Such a model can easily arise from e.g., a tracking application where $x$
+represents the position (possibly in 1D/2D/3D) and the ARIMA models the dynamics
+due to random acceleration driving the motion.
+
+\pause
+\medskip
+That is, the above model is equivalent to
+%
+\begin{align*}
+    p_{k+1} &= p_k + Tv_{k},\\
+    v_{k+1} &= v_{k} + Ta_{k},\qquad a_{k}\sim WN(0, \sigma^2_aI_2)
+\end{align*}
+
+where now $p=x$, $v$ and $a=e$ are position, velocity and acceleration respectively.
+% \pause
+% Removing $\v_k$, the position satisfies the ARIMA$(0,2,0)$ model
+% \begin{align*}
+%     (1 - z^{-1})^2 \p_k &= \mathbf{p}_k - 2\mathbf{p}_{k-1} + \mathbf{p}_{k-2} = \e_k,
+%     \quad
+%     \mathbf{e}_k \sim WN(\mathbf{0},Q),\quad Q=T^2\sigma^2_aI_2\\
+%     \y_k &= \p_k + \w_k,\quad\w_k \sim WN(\mathbf{0},R)\quad \text{(measurements)}.
+% \end{align*}
+
+% \pause
+% \medskip
+% Following the above describe realization procedure, the state space model reads
+
+% \begin{align*}
+%     \x_{k+1} &=
+%     \begin{bmatrix}
+%         1 & 0 & T & 0 \\
+%         0 & 1 & 0 & T \\
+%         0 & 0 & 1 & 0 \\
+%         0 & 0 & 0 & 1
+%     \end{bmatrix}
+%     \x_k
+%     +
+%     \begin{bmatrix}
+%         0 & 0 \\
+%         0 & 0 \\
+%         1 & 0 \\
+%         0 & 1
+%     \end{bmatrix}
+%     \a_k,
+%     \quad
+%     \a_k \sim WN(\mathbf{0},\sigma^2_aI_2).\\
+%     %
+%     \y_k &=
+%         \begin{bmatrix}
+%             1 & 0 & 0 & 0 \\
+%             0 & 1 & 0 & 0
+%         \end{bmatrix}
+%     \x_k + \w_k\qquad\qquad\qquad \w_k \sim WN(\mathbf{0},R).
+% \end{align*}
+
+}
+
 
 %-------------------------------------------------------------------------------
 \subsection{The Kalman Filter(s) and Predictor}
@@ -1062,8 +1187,8 @@ $$
 $$
 \vspace{-.2cm}
 \begin{align*}
-    \Longrightarrow \xhat(t+1|t+1) &= \E[x(t+1)|\Hpast{t+1}(\y)] = \xhat(t+1|t) + L(t+1)\e(t+1)\\
-    &\xhat(t+1|t) + L(t+1)\big(\y(t+1)-C\xhat(t+1|t)\big)
+    \Longrightarrow \xhat(t+1|t+1) &= \Elin[\x(t+1)|\Hpast{t+1}(\y)] = \xhat(t+1|t) + L(t+1)\e(t+1)\\
+    &=\xhat(t+1|t) + L(t+1)\big(\y(t+1)-C\xhat(t+1|t)\big)
 \end{align*}
 
 \medskip
@@ -1071,7 +1196,7 @@ where $L(t+1)=\Cov[\x(t+1),\e(t+1)]\Var[\e(t+1)]^{-1}$ with
 \vspace{.1cm}
 \begin{align*}
     &\Cov[\x(t+1),\e(t+1)] = \Cov[\x(t+1),\xerr(t+1|t)]C^T + \Cov[\x(t+1),\w(t+1)]\\
-    &\qquad\qquad\qquad\qquad\quad\ \ = \Cov[\xerr(t+1|t),\xerr(t+1|t)] = P(t+1|t)\\ 
+    &\qquad\qquad\qquad\qquad\quad\ \ = \Cov[\xerr(t+1|t),\xerr(t+1|t)]C^T = P(t+1|t)C^T\\ 
     &\Var[\e(t+1)] = \Lambda(t+1) = CP(t+1|t)C^T + R,\quad \textnormal{since}\ \xerr(t+1|t)\perp\w(t+1)  
 \end{align*}
 
@@ -1330,6 +1455,22 @@ This gives rise to the augmented state model to which standard KF can be applied
 \end{align*}
 
 }
+
+%--------------------------
+\myframe{Example with code}{%
+Before looking at more theory ... a first example of Kalman Filtering!
+
+\vspace{1.5cm}
+
+Jupyter notebooks: 
+
+\begin{itemize}
+    \item \texttt{1\_linear\_constant\_velocity.ipynb}
+    \item \texttt{2\_linear\_constant\_velocity\_with\_acceleration\_as\_input.ipynb}
+    \item \texttt{3\_linear\_constant\_velocity\_with\_acceleration\_as\_state.ipynb}
+\end{itemize}
+}
+
 
 %--------------------------
 \myframe{The Kalman Filter: information form}{%
