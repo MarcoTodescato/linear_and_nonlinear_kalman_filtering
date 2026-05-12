@@ -40,7 +40,7 @@
   \]
   %
   \pause
-  After update we get an error dynamics governed by
+  After the update, the error dynamics are governed by
   %
   \begin{align*}    
    \e_{t+1} &= (A-K_tC)\e_t + \v_t - K_t \w_t\\
@@ -48,20 +48,25 @@
   \end{align*}
 
   \pause
-  \vspace{.5cm}
-  \textbf{Essentially, the gain $K_t$, covariance $P_t$ and closed-loop error
-  $\Gamma_t$ dynamics are governed by the resolution of the discrete-time
-  Riccati Equation (R.E.)}
+  \vspace{.1cm}
+  \textbf{Essentially, the covariance $P_t$ and, consequently, the gain $K_t$
+  and closed-loop error $\Gamma_t$ dynamics are governed by the resolution of
+  the discrete-time Riccati Equation (R.E.)}
+  $$
+  P_{t+1} =  A\left[P_t - P_tC^T\left(CP_tC^T + R\right)^{-1}CP_t \right]A^T + Q
+  $$
 
   \medskip
+  \pause
   Therefore:
   \begin{center}
   \emph{asymptotic filter behavior $\Longleftrightarrow$ asymptotic Riccati behavior.}
   \end{center}
 
   \medskip
+  \pause
   \textit{Before looking at the behavior for the general case of non-stationary
-  processes, we consider the stationary case}
+  processes, we consider the stationary case.}
 
 }
 
@@ -71,7 +76,7 @@
 \textit{In case of stationary processes and, in particular, asymptotically
 stable systems, i.e., characterized by asymptotically stable state-space matrix
 $A$ it is possible to state a strong direct result, connecting KF and
-Wiener-Kolmogorov theories as well as the asymptotic stability of the filer.}
+Wiener-Kolmogorov theories as well as the asymptotic stability of the filter.}
 
 \pause
 \medskip
@@ -94,7 +99,7 @@ Wiener-Kolmogorov theories as well as the asymptotic stability of the filer.}
     K_\infty &= AP_\infty C^T\left[ CP_\infty C^T + R \right]^{-1} \\
     \Gamma_\infty &= A - K_\infty C 
   \end{align*}  
-  And if $(\Gamma_\infty, K_\infty)$ reachable, then $\Gamma_\infty$ is
+  And if $(\Gamma_\infty, K_\infty)$ is reachable, then $\Gamma_\infty$ is
   asymptotically stable.
 \end{exampleblock}
 
@@ -110,12 +115,12 @@ Wiener-Kolmogorov theories as well as the asymptotic stability of the filer.}
   Yet, a couple of assumptions are needed\dots
 
   \pause
-  \medskip 
   \begin{block}{Detectability}
     The pair $(A,C)$ is \emph{detectable}: i.e., every unstable mode of $A$ is
     observable.
   \end{block}
   %
+  \pause
   \begin{block}{Stabilizability}
     The pair $(A, Q^{1/2})$ is \emph{stabilizable}: i.e., every unstable mode of
     $A$ is reachable through the process noise channel.
@@ -123,8 +128,7 @@ Wiener-Kolmogorov theories as well as the asymptotic stability of the filer.}
   %
 
   \pause
-  \medskip
-  These conditions are natural because:
+  These conditions (checked via PBH tests\footnote{\url{https://en.wikipedia.org/wiki/Hautus_lemma}}) are natural because:
   %
   \begin{itemize}
     \item unobservable unstable modes cannot be corrected from measurements,
@@ -285,37 +289,42 @@ model/measurement tradeoff. }
   \[
   \dot P = A P + P A^\top + GQG^\top - P C^\top R^{-1} C P.
   \]
+  \pause
   At steady state, $P_\infty$ solves the continuous algebraic Riccati equation (CARE)
   \[
   A P + P A^\top + GQG^\top - P C^\top R^{-1} C P = 0.
   \]
+  \pause
   Under the analogous detectability/stabilizability assumptions,
   \[
   P_t \to P_\infty,
   \qquad
   K_t=P_tC^\top R^{-1} \to K_\infty = P_\infty C^\top R^{-1}.
   \]
+  \pause
   The constant-regime filter is then the steady-state Kalman--Bucy filter.
 }
 
 %--------------------------
 \myframe{Asymptotic Behavior: take-away results}{
   \begin{enumerate}
+    \pause
     \item The asymptotic behavior of the Kalman filter is governed by a R.E.
+    \pause 
     \item Under
     \[
     (A,C) \text{ detectable}, \qquad (A,Q^{1/2}) \text{ stabilizable}, \qquad R\succ0,
     \]
     the Riccati recursion converges to a unique stabilizing solution $P_\infty$.
-    \item The filter gain converges:
-    \[
-    K_k \to K_\infty.
-    \]
-    \item The estimation error covariance converges:
-    \[
-    P_k \to P_\infty.
-    \]
+    \pause  
+    \item The filter gain converges: $K_k \to K_\infty$
+    \pause
+    \item The estimation error covariance converges: $P_k \to P_\infty$
+    \pause
     \item The asymptotic filter becomes a constant-gain linear filter with the same steady-state performance as the full time-varying Kalman filter.
   \end{enumerate}
+
+  \vspace{.6cm}
+  \texttt{4\_asymptotic\_behavior.ipynb}
 }
 

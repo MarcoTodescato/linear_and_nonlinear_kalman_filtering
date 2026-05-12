@@ -1226,7 +1226,7 @@ $$
 }
 
 %--------------------------
-\myframe{Considerations on error covariance update}{%
+\myframe{Considerations}{%
 
 \begin{enumerate}
     \item To avoid/reduce numerical ill-conditioning it is sometimes preferred
@@ -1247,6 +1247,13 @@ $$
     \medskip
     \item Conversely, the \textbf{state update and prediction} depend on the measurements
     and must be computed \textbf{online}.
+
+    \pause
+    \medskip
+    \item So far, with no additional assumptions on the specific distributions
+    of $\w,\v,\xzero$, KF is optimal among linear estimators $\Elin[\cdot]$.
+    \pause
+    Assuming joint Gaussianity, KF is the true MMSE/Bayesan estimator ($\Elin\equiv\E$).
 \end{enumerate}
 
 
@@ -1570,14 +1577,14 @@ Jupyter notebooks:
         \begin{itemize}
             \item Propagates
             \[
-                Y(t|t),\quad \xi(t|t)
+                \xi(t|t),\quad Y(t|t) 
             \]
             \item Measurement update is additive:
             \[
-                Y^+ = Y^- + C^TR^{-1}C
+                \xi^+ = \xi^- + C^TR^{-1}y
             \]
             \[
-                \xi^+ = \xi^- + C^TR^{-1}y
+                Y^+ = Y^- + C^TR^{-1}C
             \]
             \item No explicit Kalman gain
             \item Natural for multi-sensor fusion and sparse large-scale problems
@@ -1664,8 +1671,13 @@ information}}: more scalable and simpler.}
     \pause
     \medskip
     In the KF context, we deal with estimation of a \underline{time-varying
-    random vector based on data and prior information}. Hence the relevant bound
-    is what is usually referred to as the \textbf{posterior (Bayesian) CRLB}
+    random vector} based on \underline{data and prior information}.
+    
+    \pause
+    \medskip
+    $\Longrightarrow$ relevant bound what usually referred to as
+    \textbf{posterior (Bayesian) CRLB} (i.e., expected, wrt the posterior
+    density, curvature of the negative posterior log-density)
     %
     $$
         \mathcal{I}(t|t) = -\E[\nabla_\x^2 \log p(\x(t)|\Hpast{t}(\y))\ |\ \Hpast{t}(\y)]\qquad \textnormal{Fisher Information Matrix}
@@ -1674,7 +1686,7 @@ information}}: more scalable and simpler.}
     \medskip
     \begin{itemize}
         \pause
-        \item For any unbiased estimator $\xhat_u(t|t)$ of $\x(t)$ from $\Hpast{t}(\y)$:
+        \item For any unbiased estimator $\xhat_u(t|t)$ of $\x(t)$ based on $\Hpast{t}(\y)$:
         \[
             \E[\xhat_u(t|t)-\x(t)] = 0,
             \qquad
@@ -1684,7 +1696,7 @@ information}}: more scalable and simpler.}
 
         \pause
         \medskip
-        \item Under the linear-Gaussian assumptions used for KF:
+        \item \underline{\textbf{Under the linear-Gaussian assumptions}} used for KF:
         \[
             \mathcal{I}(t|t)=Y(t|t)=P(t|t)^{-1} \quad \Longrightarrow \quad \Cov[\xhat_u(t|t)-\x(t)] \succcurlyeq P(t|t)
         \]
@@ -1709,6 +1721,7 @@ information}}: more scalable and simpler.}
     \]
 
     \medskip
+    \pause
     For any estimator $\xhat_u(t|t)$ based on $\Hpast{t}(\y)$, define
     \[
         d(t):=\xhat_u(t|t)-\xhat(t|t),
@@ -1717,21 +1730,25 @@ information}}: more scalable and simpler.}
     \]
     
     \medskip
+    \pause
     By the orthogonality principle of conditional expectation,
     % \[
     $\E\!\left[\xerr(t|t)\,d(t)^T\right]=0$.
     % \]
 
     \medskip
+    \pause
     Hence
     \begin{align*}
         \Cov[\x(t)-\xhat_u(t|t)]
+        &= \Cov[(\x(t) - \xhat(t|t)) + (\xhat(t|t) - \xhat_u(t|t))]\\
         &= \Cov[\xerr(t|t)-d(t)]\\
         &= \Cov[\xerr(t|t)] + \Cov[d(t)]\\
         &= P(t|t) + \Cov[d(t)]
         \succcurlyeq P(t|t).
     \end{align*}
 
+    \pause
     Equality holds iff $\Cov[d(t)]=0$ (i.e., $d(t)=0$ a.s.), namely
     $\xhat_u(t|t)=\xhat(t|t)$
 }
