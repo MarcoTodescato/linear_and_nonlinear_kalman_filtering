@@ -186,7 +186,7 @@ model to compute the pseudo innovation.
 \myframe{EKF: observations}{%
 
 \begin{itemize}
-    \item The linearized model is used only to compute $L(k)$.
+    \item The linearized model is used only to compute $P(\cdot|\cdot)$.
     
     \pause
     \item The statistical interpretation of $\xhat(k+1|k)$ and $\xhat(k|k)$ can
@@ -215,8 +215,10 @@ also used to propagate the prior estimated state in the filter equations
 $$
 \xhat(k+1|k) = \hat{f}_k(\xhat(k|k))
 $$
-
 All other equations remain the same assuming now $\Phi(k|k)=\frac{\partial \hat{f}_k}{\partial x}|_{\x=\xhat(k|k)}$.
+
+\vspace{.4cm}
+\texttt{5\_nonlinear\_ekf.ipynb}
 
 }
 
@@ -227,8 +229,10 @@ All other equations remain the same assuming now $\Phi(k|k)=\frac{\partial \hat{
 %--------------------------
 \myframe{Unscented Kalman Filter (UKF)}{%
     \begin{itemize}
-        \item Uses sigma points to capture higher-order moments: for any random
-        vector $\x$, sigma points are a set of any $N$ vectors satisfying:
+        \item Uses sigma points to capture higher-order
+        moments\footnote{\url{https://en.wikipedia.org/wiki/Unscented_transform}}: for
+        any random vector $\x$, sigma points are a set of any $N$ vectors
+        satisfying:
         \begin{itemize}
             \item first order: weighted average of points corresponds to $\E[\x]$
             \item second order: weighted average of points covariance corresponds to $\Var[\x]$ 
@@ -257,7 +261,7 @@ All other equations remain the same assuming now $\Phi(k|k)=\frac{\partial \hat{
 \pause
 \medskip
 \textit{UKF equations are not difficult but heavy in notation. We'll see them in
-code rather than on slides.}
+code rather than on slides.} \texttt{9\_nonlinear\_ukf.ipynb}
 
 }
 
