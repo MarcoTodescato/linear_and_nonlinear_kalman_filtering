@@ -186,7 +186,7 @@ model to compute the pseudo innovation.
 \myframe{EKF: observations}{%
 
 \begin{itemize}
-    \item The linearized model is used only to compute $P(\cdot|\cdot)$.
+    \item The linearized model is used only to compute matrix-related update, $P(\cdot|\cdot), \Lambda, L$
     
     \pause
     \item The statistical interpretation of $\xhat(k+1|k)$ and $\xhat(k|k)$ can
@@ -194,7 +194,7 @@ model to compute the pseudo innovation.
 
     \pause
     \item The algorithm is much more computationally intense. It requires
-    computation of $H$ and $\Phi$ at every step, hence $L$ cannot be precomputed
+    computation of $F, H$ and $\Phi$ at every step, hence $L$ cannot be precomputed
     offline.
     
     \pause
@@ -210,11 +210,12 @@ scheme is used, by discretizing the CT dynamics, e.g.,
 $$
 \x(k+1) = \hat{f}_k(\x(k)) \overset{Euler}{=} \x(k) + (t_{k+1}-t_k)f(\x(k))
 $$
-also used to propagate the prior estimated state in the filter equations
+used to propagate the prior estimated state in the filter equations
 %
 $$
 \xhat(k+1|k) = \hat{f}_k(\xhat(k|k))
 $$
+\pause
 All other equations remain the same assuming now $\Phi(k|k)=\frac{\partial \hat{f}_k}{\partial x}|_{\x=\xhat(k|k)}$.
 
 \vspace{.4cm}
